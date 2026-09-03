@@ -36,6 +36,8 @@
     --lime: #DAF06B;
     --gold: #F5C842;
     --paper: #F8F5EC;
+    --content-max: 1240px;
+    --pad-x: clamp(28px, 6vw, 88px);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; font-size: 110%; }
@@ -88,8 +90,8 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     padding: 14px 28px;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: center;
     align-items: center;
     z-index: 100;
     backdrop-filter: blur(8px);
@@ -126,7 +128,7 @@
     100% { box-shadow: 0 0 0 0 rgba(240, 78, 42, 0); }
   }
 
-  .topbar nav { display: flex; gap: 26px; }
+  .topbar nav { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
   .topbar nav a {
     color: var(--ink-soft);
     text-decoration: none;
@@ -192,13 +194,17 @@
   /* === HERO === */
   .hero {
     min-height: 100vh;
-    padding: 110px 40px 80px;
+    padding-top: 130px; padding-bottom: 80px;
+    padding-left: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
+    padding-right: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: auto min(400px, 32vw);
     gap: 60px;
+    justify-content: center;
     align-items: center;
     position: relative;
   }
+  .hero-text { max-width: 600px; }
   .hero .now-chip {
     display: inline-flex;
     align-items: center;
@@ -300,9 +306,9 @@
   .photo-stage {
     position: relative;
     width: 100%;
-    max-width: 460px;
+    max-width: 400px;
     aspect-ratio: 1/1;
-    margin-left: auto;
+    margin: 0 auto;
     opacity: 0;
     animation: fadeIn 1.4s 0.6s forwards;
   }
@@ -390,42 +396,13 @@
     to   { opacity: 1; }
   }
 
-  /* === MARQUEE === */
-  .marquee {
-    background: var(--ink);
-    color: var(--bg);
-    overflow: hidden;
-    padding: 22px 0;
-    border-top: 1px solid var(--ink);
-    border-bottom: 1px solid var(--ink);
-  }
-  .marquee:hover .marquee-track { animation-play-state: paused; }
-  .marquee-track {
-    display: inline-flex;
-    white-space: nowrap;
-    animation: marquee 38s linear infinite;
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-variation-settings: "wdth" 100, "wght" 400;
-    font-size: 1.6rem;
-    letter-spacing: -0.01em;
-    gap: 40px;
-  }
-  .marquee-track span { display: inline-flex; align-items: center; gap: 40px; }
-  .marquee-track .star {
-    display: inline-block;
-    width: 16px; height: 16px;
-    background: var(--coral);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .marquee-track .it { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--lime); }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
   /* === SECTIONS === */
-  section { padding: 120px 40px; position: relative; }
+  section {
+    padding-top: 120px; padding-bottom: 120px;
+    padding-left: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
+    padding-right: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
+    position: relative;
+  }
   .section-head {
     display: flex; align-items: baseline; gap: 22px;
     margin-bottom: 60px;
@@ -603,11 +580,10 @@
   /* === SKILLS (BENTO) === */
   .skills { background: var(--bg); }
   .bento {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    grid-auto-rows: auto;
-    gap: 18px;
+    columns: 3;
+    column-gap: 18px;
     max-width: 1300px;
+    margin: 0 auto;
   }
   .card {
     background: var(--paper);
@@ -616,6 +592,8 @@
     padding: 32px;
     position: relative;
     overflow: hidden;
+    break-inside: avoid;
+    margin-bottom: 18px;
     transition: transform 0.4s, box-shadow 0.4s;
     will-change: transform;
   }
@@ -658,7 +636,6 @@
   }
 
   .card.tall {
-    grid-column: 1; grid-row: 1 / span 2; align-self: stretch;
     background: var(--olive); color: var(--bg); border-color: var(--olive);
   }
   .card.tall .card-label { color: var(--lime); }
@@ -678,7 +655,7 @@
   }
   .card.tall .quote .lime { color: var(--lime); }
 
-  .card.coral { background: var(--coral); color: var(--bg); border-color: var(--coral); grid-column: 3; grid-row: 1; }
+  .card.coral { background: var(--coral); color: var(--bg); border-color: var(--coral); }
   .card.coral .card-label { color: var(--bg); opacity: 0.85; }
   .card.coral .big-num {
     font-family: 'Bricolage Grotesque', sans-serif;
@@ -696,8 +673,7 @@
     opacity: 0.92;
   }
 
-  .card.span2 { grid-column: 2 / span 2; grid-row: 2; }
-  .card.wide { grid-column: 1 / span 3; grid-row: 3; }
+  .card.wide { column-span: all; margin-top: 0; }
   .card.wide .card-title {
     font-size: 1.8rem;
     line-height: 1.18;
@@ -713,7 +689,9 @@
   .idiomas {
     background: var(--lime);
     color: var(--ink);
-    padding: 100px 40px;
+    padding-top: 100px; padding-bottom: 100px;
+    padding-left: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
+    padding-right: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
   }
   .idiomas .section-head .num { color: var(--coral); }
   .idiomas .section-head .rule { background: rgba(15, 15, 14, 0.18); }
@@ -757,7 +735,9 @@
   .lang .dots i.on { background: var(--ink); }
 
   /* === CONTATO === */
-  .contato { background: var(--bg); padding: 140px 40px 0; }
+  .contato { background: var(--bg); padding-top: 140px; padding-bottom: 0;
+    padding-left: max(var(--pad-x), calc((100% - var(--content-max)) / 2));
+    padding-right: max(var(--pad-x), calc((100% - var(--content-max)) / 2)); }
   .contato .head { margin-bottom: 70px; }
   .contato .head .label {
     font-family: 'JetBrains Mono', monospace;
@@ -895,32 +875,37 @@
     opacity: 1; transform: translateY(0);
   }
 
+
+  /* === CONTATO em duas colunas === */
+  .contato-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1fr;
+    gap: 64px;
+    max-width: 1240px;
+    align-items: start;
+  }
+  .contato .contato-grid .head { margin-bottom: 0; }
+  .contato .contact-list { max-width: none; }
+
   /* === RESPONSIVE === */
-  @media (max-width: 1500px) { .topbar .t-email { display: none; } }
   @media (max-width: 1100px) {
-    .topbar { grid-template-columns: 1fr 1fr; padding: 12px 22px; }
-    .topbar nav { display: none; }
-    .topbar .t-phone { display: none; }
-    .bento { grid-template-columns: 1fr 1fr; }
-    .card.tall { grid-row: auto; grid-column: 1 / span 2; }
-    .card.coral { grid-column: auto; grid-row: auto; }
-    .card.span2 { grid-column: 1 / span 2; grid-row: auto; }
-    .card.wide { grid-column: 1 / span 2; grid-row: auto; }
+    .topbar { padding: 12px 22px; }
+    .contato-grid { grid-template-columns: 1fr; gap: 40px; }
+    .bento { columns: 2; }
   }
   @media (max-width: 720px) {
-    .topbar { padding: 12px 16px; }
-    .topbar .contact-mini { gap: 12px; }
-    .topbar .t-sougov { display: none; }
-    .topbar .ident { font-size: 0.62rem; }
+    .topbar { padding: 12px 14px; }
+    .topbar nav { gap: 16px; }
+    .topbar nav a { font-size: 0.72rem; }
   }
   @media (max-width: 800px) {
-    section { padding: 80px 22px; }
+    section { padding-top: 80px; padding-bottom: 80px; }
     .section-head { flex-direction: column; align-items: flex-start; gap: 10px; }
     .section-head .rule { width: 100%; flex: none; }
     .contato .head h2, .hero h1 { word-break: normal; overflow-wrap: anywhere; }
     .hero {
       grid-template-columns: 1fr;
-      padding: 110px 22px 60px;
+      padding-top: 110px; padding-bottom: 60px;
       gap: 50px;
     }
     .hero h1 .row2 { padding-left: 0.3em; }
@@ -937,12 +922,9 @@
     .job .years { padding-top: 0; }
     .edu { grid-template-columns: 1fr; gap: 8px; }
     .edu .inst { text-align: left; white-space: normal; }
-    .bento { grid-template-columns: 1fr; }
-    .card.tall, .card.wide, .card.span2, .card.coral { grid-column: 1; grid-row: auto; }
+    .bento { columns: 1; }
     .lang-list { grid-template-columns: 1fr; gap: 28px; }
     .float-nav { bottom: 16px; right: 16px; padding: 8px 12px; }
-    .marquee-track { font-size: 1.2rem; gap: 28px; }
-    .marquee-track span { gap: 28px; }
     .hero .meta-row { flex-wrap: wrap; gap: 24px; }
     .footer-meta { padding: 22px 22px; }
   }
@@ -964,9 +946,6 @@
 
   <!-- TOPBAR -->
   <header class="topbar" id="topbar">
-    <div class="ident">
-      <span class="ident-text">Alexandre Camargo &nbsp;/&nbsp; EPPGG</span>
-    </div>
     <nav aria-label="Navegação principal">
       <a href="#sobre">Sobre</a>
       <a href="#trajetoria">Trajetória</a>
@@ -974,25 +953,6 @@
       <a href="#repertorio">Repertório</a>
       <a href="#contato">Contato</a>
     </nav>
-    <div class="contact-mini">
-      <a href="mailto:alexandrejgcamargo@gmail.com" class="t-email">alexandrejgcamargo@gmail.com</a>
-      <a href="tel:+5512981865866" class="t-phone">(12) 98186-5866</a>
-      <a href="https://curriculo.sougov.economia.gov.br/alexandre-camargo-8221295264" target="_blank" rel="noopener" class="t-sougov">SouGov</a>
-      <a href="https://linkedin.com/in/alegarciacamargo" target="_blank" rel="noopener" class="icon-link" aria-label="LinkedIn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
-          <rect x="2" y="9" width="4" height="12"/>
-          <circle cx="4" cy="4" r="2"/>
-        </svg>
-      </a>
-      <a href="https://www.instagram.com/alegarciacamargo/" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="18" height="18" rx="5"/>
-          <circle cx="12" cy="12" r="4"/>
-          <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
-        </svg>
-      </a>
-    </div>
   </header>
 
 <main>
@@ -1029,13 +989,6 @@
     </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>Escuta ativa<span class="star"></span><span class="it">colaboração em rede</span><span class="star"></span>Foco no cidadão<span class="star"></span><span class="it">linguagem simples</span><span class="star"></span>Inovação pública<span class="star"></span><span class="it">ética &amp; integridade</span><span class="star"></span>Design Thinking<span class="star"></span><span class="it">visão de futuro</span><span class="star"></span></span>
-      <span>Escuta ativa<span class="star"></span><span class="it">colaboração em rede</span><span class="star"></span>Foco no cidadão<span class="star"></span><span class="it">linguagem simples</span><span class="star"></span>Inovação pública<span class="star"></span><span class="it">ética &amp; integridade</span><span class="star"></span>Design Thinking<span class="star"></span><span class="it">visão de futuro</span><span class="star"></span></span>
-    </div>
-  </div>
 
   <!-- SOBRE -->
   <section class="sobre" id="sobre">
@@ -1254,6 +1207,7 @@ Combino minha experiência de <span class="coral">mais de dez anos</span> como s
 
   <!-- CONTATO -->
   <section class="contato" id="contato">
+    <div class="contato-grid">
     <div class="head reveal">
       <div class="label">06 / Contato</div>
       <h2>Vamos <em>conversar</em>?</h2>
@@ -1283,6 +1237,7 @@ Combino minha experiência de <span class="coral">mais de dez anos</span> como s
         <span class="label">SouGov</span>
         <a href="https://curriculo.sougov.economia.gov.br/alexandre-camargo-8221295264" target="_blank" rel="noopener">Currículo público</a>
       </div>
+    </div>
     </div>
   </section>
 
