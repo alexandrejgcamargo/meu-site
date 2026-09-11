@@ -58,6 +58,13 @@
 
   /* ===== LAYOUT ===== */
   .shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(460px,55%) 1fr;gap:clamp(20px,3vw,44px);padding:98px clamp(16px,3vw,40px) 60px;max-width:1600px;margin:0 auto;min-height:100vh}
+  .scroll-cue,.board-intro{display:none}
+  .board-intro{
+    width:100%;max-width:520px;margin:0 auto 16px;color:var(--parch);
+    font-family:var(--disp);font-weight:700;font-size:1.15rem;line-height:1.25;
+  }
+  .board-intro .bi-num{display:block;font-family:var(--mono);font-weight:600;font-size:.68rem;letter-spacing:.16em;color:var(--gold-2);margin-bottom:7px}
+  .board-intro small{display:block;margin-top:7px;font-family:var(--body);font-weight:400;font-size:.84rem;color:rgba(243,233,210,.8)}
   .mesa{position:sticky;top:98px;height:calc(100vh - 118px);display:flex;align-items:center;justify-content:center}
   .mesa svg{width:100%;height:100%;max-height:calc(100vh - 118px);overflow:visible}
 
@@ -85,6 +92,8 @@
   .tile .cn{font-family:var(--mono);font-weight:600;font-size:10px;fill:var(--parch);text-anchor:middle;dominant-baseline:central;pointer-events:none;opacity:.85}
   .tile .cn.dark{fill:var(--ink);opacity:.7}
   .tile .bsep{stroke:var(--parch);opacity:.45;stroke-width:1}
+  .tile .mnum{font-family:var(--mono);font-weight:600;font-size:22px;fill:var(--parch);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .tile .mnum.dark{fill:var(--ink)}
   .tile .bsep.dark{stroke:var(--ink);opacity:.35}
   .tile g.art{transition:opacity .3s}
   .tile:hover g.art,.tile.active g.art{opacity:1}
@@ -220,6 +229,27 @@
   footer{margin-top:34px;padding-top:18px;border-top:1px solid rgba(201,154,46,.3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.78rem;color:rgba(243,233,210,.7);font-style:italic}
   footer a{text-decoration:none;border-bottom:1px solid var(--gold)}
 
+  .fab-board,.cardnav{display:none}
+  .fab-board{
+    position:fixed;right:14px;bottom:16px;z-index:160;align-items:center;gap:8px;
+    background:var(--gold);color:var(--ink);border:2px solid var(--ink);border-radius:50px;
+    padding:11px 16px;font-family:var(--mono);font-weight:600;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+    box-shadow:0 10px 22px -8px rgba(0,0,0,.65);
+    opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .3s,transform .3s;
+  }
+  .fab-board svg{width:17px;height:17px}
+  .fab-board.show{opacity:1;transform:none;pointer-events:auto}
+  .fab-board:active{transform:translateY(2px)}
+
+  .cardnav{margin-top:16px;gap:10px}
+  .cardnav button{
+    flex:1;background:transparent;color:var(--parch);border:1.5px solid rgba(201,154,46,.65);border-radius:3px;
+    padding:12px 10px;font-family:var(--mono);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;transition:.2s;
+  }
+  .cardnav button:active{background:rgba(201,154,46,.2);transform:translateY(1px)}
+  .cardnav button[disabled]{opacity:.32;pointer-events:none}
+
   .confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
   .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--parch);color:var(--ink);border:2px solid var(--ink);padding:10px 18px;border-radius:4px;font-family:var(--mono);font-weight:600;font-size:.85rem;opacity:0;transition:.35s;z-index:400;display:flex;align-items:center;gap:12px;box-shadow:0 14px 30px -10px rgba(0,0,0,.6)}
   .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -248,36 +278,46 @@
   /* ===== MOBILE ===== */
   .trail-m{display:none}.fab{display:none}
   @media(max-width:1080px){
-    .shell{grid-template-columns:1fr;padding-top:184px;gap:0}
-    .mesa{position:static;height:auto;display:block;margin:0 auto 6px;max-width:560px}
-    .mesa svg{height:auto;max-height:none}
-    .tile .bt,.tile .yr,.tile .nm,.tile .cn,.tile .bsep,.dice-cta,.tile g.art,#decks{display:none}
-    #tiles .tile.active .big{display:none}
-    .tile .big{display:block;font-family:var(--mono);font-weight:600;font-size:40px;fill:var(--ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-    #tiles.has-active .tile:not(.active){filter:saturate(.6)}
+    .top{padding:10px 14px;background:#16301F}
+    .trail-m,.fab{display:none!important}
+    .shell{grid-template-columns:1fr;padding-top:82px;gap:0}
     .placar{font-size:.68rem;padding:5px 10px}
-    .brand .t small{display:none}
     .btn .t{display:none}
     .btn{padding:0;width:44px;height:44px;justify-content:center}
     .btn .ic{width:19px;height:19px}
-    .trail-m{display:block;position:fixed;top:56px;left:0;right:0;z-index:140;background:#16301F;border-bottom:1px solid rgba(201,154,46,.35);padding:8px 10px}
-    .trail-m svg{width:100%;height:86px;overflow:visible;touch-action:manipulation}
-    .tm-tile{cursor:pointer}
-    .tm-hit{fill:transparent}
-    .tm-tile rect.b{fill:var(--parch-2);stroke:var(--ink);stroke-width:1.5}
-    .tm-tile.active rect.b{stroke:var(--gold-2);stroke-width:2.5}
-    .tm-line{stroke:rgba(243,233,210,.35);stroke-width:2;stroke-dasharray:3 5}
-    .tm-done{stroke:var(--gold-2);stroke-width:3;stroke-linecap:round}
-    .tm-pawn{transition:transform .6s cubic-bezier(.34,1.3,.64,1)}
-    .fab{display:grid;place-items:center;position:fixed;right:14px;bottom:14px;width:56px;height:56px;opacity:.94;border-radius:50%;background:var(--gold);border:2px solid var(--ink);box-shadow:0 10px 24px -8px rgba(0,0,0,.6);z-index:160}
-    .fab svg{width:26px;height:26px}
-    .sec{scroll-margin-top:168px}
+
+    /* tabuleiro como tela de abertura */
+    .mesa{
+      position:static;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      min-height:0;padding:32px 0 12px;margin:0;max-width:none;height:auto;
+      border-top:1px solid rgba(201,154,46,.3);
+    }
+    .board-intro{display:block}
+    .mesa svg{width:100%;height:auto;max-height:none}
+    .scroll-cue{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:16px;
+      font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2)}
+    .scroll-cue .arrow{font-size:1.05rem;animation:bob 1.9s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:translateY(0);opacity:.65}50%{transform:translateY(6px);opacity:1}}
+
+    .tile .bt,.tile .yr,.tile .nm,.tile .cn,.tile .bsep,.tile .big,#decks{display:none}
+    .dice-cta{font-size:13px;letter-spacing:2.2px}
+    #tiles.has-active .tile:not(.active){filter:saturate(.6)}
+    .tile:hover{transform:none}
+    .tile:hover .sh{transform:none}
+    .tile:active{transform:translateY(3px)}
+    .tile:active .bg{stroke-width:3}
+    .tile:active .sh{opacity:.45;transform:translate(1px,1px)}
+    .fab-board{display:inline-flex}
+    .cardnav{display:flex}
     #contato{padding-bottom:96px}
+
+    .sec{scroll-margin-top:76px}
     .player{grid-template-columns:1fr}
     .photo{width:120px;height:120px}
     .rules{grid-template-columns:1fr}
     .citem{grid-template-columns:1fr auto}
     .citem .cl{grid-column:1/-1}
+    .contato-grid{grid-template-columns:1fr;gap:40px}
   }
   @media(max-width:560px){ .brand .t{display:none} .brand .mono{width:34px;height:34px;font-size:.85rem} }
   /* === ALTO CONTRASTE === */
@@ -364,6 +404,7 @@
 
   <!-- ================= MESA ================= -->
   <aside class="mesa" aria-label="Tabuleiro da trajetória">
+    <div class="board-intro"><span class="bi-num">O JOGO</span><span>O tabuleiro da minha trajetória</span><small>Toque numa casa para abrir a carta — ou role o dado.</small></div>
     <svg viewBox="0 0 700 560" id="board" role="img" aria-label="Tabuleiro com nove casas representando a trajetória de Alexandre Camargo">
       <ellipse cx="280" cy="280" rx="400" ry="330" fill="url(#spot)"/>
 
@@ -399,6 +440,7 @@
 
       <g id="decks"></g>
     </svg>
+    <div class="scroll-cue" aria-hidden="true"><span>deslize para jogar</span><span class="arrow">↓</span></div>
   </aside>
 
   <!-- ================= CONTEÚDO ================= -->
@@ -560,7 +602,11 @@
   </div>
 </div>
 
-<svg class="confetti" id="confetti" aria-hidden="true"></svg>
+<button class="fab-board" id="btnBoard" aria-label="Voltar ao tabuleiro">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+  <span>Tabuleiro</span>
+</button>
+<svg class="confetti" id="confetti" aria-hidden="true"></svg>',
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -569,7 +615,7 @@
   var NS='http://www.w3.org/2000/svg';
   function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
 
-  var CASAS=[
+  var CASAS_D=[
     {x:78,y:100,lbl:'INÍCIO',nm:'Início',yr:'2009',tipo:'start'},
     {x:219,y:100,lbl:'FORMAÇÃO',nm:'Cásper Líbero',yr:'2009–2012',tipo:'edu'},
     {x:361,y:100,lbl:'EXPERIÊNCIA',nm:'MAPA',yr:'2013',tipo:'exp'},
@@ -580,6 +626,25 @@
     {x:219,y:460,lbl:'FORMAÇÃO',nm:'ENAP',yr:'2026',tipo:'edu'},
     {x:78,y:460,lbl:'CHEGADA',nm:'MPA · hoje',yr:'2026 →',tipo:'end'}
   ];
+  var MPOS=[[90,100],[250,100],[410,100],[410,290],[410,480],[410,670],[250,670],[90,670],[90,480]];
+  var CASAS_M=MPOS.map(function(p,i){var d=CASAS_D[i];return {x:p[0],y:p[1],lbl:d.lbl,nm:d.nm,yr:d.yr,tipo:d.tipo};});
+  var CASAS=CASAS_D;
+  var LAYOUT={
+    d:{viewBox:'0 0 700 560', W:92, H:100, band:22, iconY:46, iconH:26, iconW:54, casas:CASAS_D, full:true,
+       spot:{cx:280,cy:280,rx:400,ry:330},
+       board:{x:16,y:24,w:548,h:512}, bin:{x:25,y:33,w:530,h:494}, bin2:{x:31,y:39,w:518,h:482},
+       orn:'M39 47 h20 M39 47 v20 M541 47 h-20 M541 47 v20 M39 513 h20 M39 513 v-20 M541 513 h-20 M541 513 v-20',
+       dots:[[48,56],[532,56],[48,504],[532,504]],
+       track:'M78 100 L446 100 Q502 100 502 156 L502 404 Q502 460 446 460 L78 460',
+       dice:{x:290,y:276,s:1}, pawnY:9, pawnS:0.26},
+    m:{viewBox:'0 0 500 770', W:140, H:150, band:34, iconY:96, iconH:66, iconW:110, casas:CASAS_M, full:false,
+       spot:{cx:250,cy:385,rx:330,ry:440},
+       board:{x:4,y:8,w:492,h:754}, bin:{x:13,y:17,w:474,h:736}, bin2:{x:19,y:23,w:462,h:724},
+       orn:'M27 31 h22 M27 31 v22 M473 31 h-22 M473 31 v22 M27 739 h22 M27 739 v-22 M473 739 h-22 M473 739 v-22',
+       dots:[[36,40],[464,40],[36,730],[464,730]],
+       track:'M90 100 L350 100 Q410 100 410 160 L410 610 Q410 670 350 670 L150 670 Q90 670 90 610 L90 480',
+       dice:{x:250,y:385,s:1.15}, pawnY:26, pawnS:0.44}
+  };
   var COL={start:'#C99A2E',end:'#C99A2E',exp:'#8B2E2E',edu:'#1F3A5F'};
 
   /* ícones gravados */
@@ -616,31 +681,42 @@
   }
 
   /* casas retangulares */
-  var gT=document.getElementById('tiles'), W=92, H=100;
-  CASAS.forEach(function(c,i){
-    var g=el('g',{'class':'tile'+(c.tipo==='end'?' chegada':''),'data-i':i,tabindex:0,role:'button','aria-label':'Ir para a casa '+i+': '+c.nm});
-    var x=c.x-W/2,y=c.y-H/2;
-    g.appendChild(el('rect',{'class':'sh',x:x+3,y:y+3,width:W,height:H,rx:3}));
-    g.appendChild(el('rect',{'class':'bg',x:x,y:y,width:W,height:H,rx:3}));
-    g.appendChild(el('rect',{'class':'halo',x:x-6,y:y-6,width:W+12,height:H+12,rx:7}));
-    g.appendChild(el('rect',{'class':'band',x:x,y:y,width:W,height:22,rx:3,fill:COL[c.tipo]}));
-    g.appendChild(el('rect',{x:x,y:y+14,width:W,height:8,fill:COL[c.tipo]}));
-    var bt=el('text',{'class':'bt'+(c.tipo==='start'||c.tipo==='end'?' dark':''),x:c.x+10,y:y+11}); bt.textContent=c.lbl; g.appendChild(bt);
-    var cn=el('text',{'class':'cn'+(c.tipo==='start'||c.tipo==='end'?' dark':''),x:x+10,y:y+11}); cn.textContent=i; g.appendChild(cn);
-    g.appendChild(el('line',{'class':'bsep'+(c.tipo==='start'||c.tipo==='end'?' dark':''),x1:x+19,y1:y+5,x2:x+19,y2:y+17}));
-    var ic=icon(c.tipo,0,0); ic.setAttribute('data-cx',c.x); ic.setAttribute('data-cy',y+46); g.appendChild(ic);
-    var big=el('text',{'class':'big',x:c.x,y:y+H/2+8}); big.textContent=i; g.appendChild(big);
-    var nm=el('text',{'class':'nm',x:c.x,y:y+H-24}); nm.textContent=c.nm; g.appendChild(nm);
-    var yr=el('text',{'class':'yr',x:c.x,y:y+H-11}); yr.textContent=c.yr; g.appendChild(yr);
-    if(c.tipo==='end'){ g.appendChild(el('rect',{x:x+W-14,y:y-30,width:2.4,height:32,fill:'#1A1A1A'})); g.appendChild(el('path',{d:'M'+(x+W-11.6)+' '+(y-30)+' h21 l-6 7 l6 7 h-21 z',fill:'#8B2E2E',stroke:'#1A1A1A','stroke-width':1.5})); }
-    g.addEventListener('click',function(){goTo(i);});
-    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(i);}});
-    gT.appendChild(g);
-  });
-  // segunda passada: escala e centraliza os ícones com precisão
-  Array.prototype.forEach.call(gT.querySelectorAll('.art'),function(a){
-    fitIcon(a,+a.getAttribute('data-cx'),+a.getAttribute('data-cy'),26,54);
-  });
+  var gT=document.getElementById('tiles');
+  var MODE=null;
+  function buildTiles(cfg){
+    while(gT.firstChild) gT.removeChild(gT.firstChild);
+    var W=cfg.W,H=cfg.H;
+    cfg.casas.forEach(function(c,i){
+      var g=el('g',{'class':'tile'+(c.tipo==='end'?' chegada':''),'data-i':i,tabindex:0,role:'button','aria-label':'Ir para a casa '+i+': '+c.nm});
+      var x=c.x-W/2,y=c.y-H/2, dark=(c.tipo==='start'||c.tipo==='end')?' dark':'';
+      g.appendChild(el('rect',{'class':'sh',x:x+3,y:y+3,width:W,height:H,rx:3}));
+      g.appendChild(el('rect',{'class':'bg',x:x,y:y,width:W,height:H,rx:3}));
+      g.appendChild(el('rect',{'class':'halo',x:x-6,y:y-6,width:W+12,height:H+12,rx:7}));
+      g.appendChild(el('rect',{'class':'band',x:x,y:y,width:W,height:cfg.band,rx:3,fill:COL[c.tipo]}));
+      g.appendChild(el('rect',{x:x,y:y+cfg.band-8,width:W,height:8,fill:COL[c.tipo]}));
+      if(cfg.full){
+        var bt=el('text',{'class':'bt'+dark,x:c.x+10,y:y+11}); bt.textContent=c.lbl; g.appendChild(bt);
+        var cn=el('text',{'class':'cn'+dark,x:x+10,y:y+11}); cn.textContent=i; g.appendChild(cn);
+        g.appendChild(el('line',{'class':'bsep'+dark,x1:x+19,y1:y+5,x2:x+19,y2:y+17}));
+        var nm=el('text',{'class':'nm',x:c.x,y:y+H-24}); nm.textContent=c.nm; g.appendChild(nm);
+        var yr=el('text',{'class':'yr',x:c.x,y:y+H-11}); yr.textContent=c.yr; g.appendChild(yr);
+      }else{
+        var mn=el('text',{'class':'mnum'+dark,x:c.x,y:y+cfg.band/2}); mn.textContent=i; g.appendChild(mn);
+      }
+      var ic=icon(c.tipo,0,0); ic.setAttribute('data-cx',c.x); ic.setAttribute('data-cy',y+cfg.iconY); g.appendChild(ic);
+      if(c.tipo==='end'){
+        var fx=cfg.full?(x+W-14):(x+W-18), fy=cfg.full?(y-30):(y-40), fh=cfg.full?32:42, fw=cfg.full?21:27, fn=cfg.full?6:8;
+        g.appendChild(el('rect',{x:fx,y:fy,width:2.6,height:fh,fill:'#1A1A1A'}));
+        g.appendChild(el('path',{d:'M'+(fx+2.6)+' '+fy+' h'+fw+' l-'+fn+' '+fn+' l'+fn+' '+fn+' h-'+fw+' z',fill:'#8B2E2E',stroke:'#1A1A1A','stroke-width':1.5}));
+      }
+      g.addEventListener('click',function(){goTo(i);});
+      g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(i);}});
+      gT.appendChild(g);
+    });
+    Array.prototype.forEach.call(gT.querySelectorAll('.art'),function(a){
+      fitIcon(a,+a.getAttribute('data-cx'),+a.getAttribute('data-cy'),cfg.iconH,cfg.iconW);
+    });
+  }
 
   /* baralhos */
   var gD=document.getElementById('decks'), DECKS=[['Competências','#1F3A5F',110],['Conhecimentos','#8B2E2E',280],['Áreas','#C99A2E',450]];
@@ -672,10 +748,13 @@
 
   /* trilha e peão */
   var track=document.getElementById('track'),done=document.getElementById('trackDone'),pawn=document.getElementById('pawn');
-  var L=track.getTotalLength(); done.style.strokeDasharray=L; done.style.strokeDashoffset=L;
-  var lens=CASAS.map(function(c){var best=0,bd=1e9;for(var s=0;s<=L;s+=1.5){var p=track.getPointAtLength(s);var d=(p.x-c.x)*(p.x-c.x)+(p.y-c.y)*(p.y-c.y);if(d<bd){bd=d;best=s;}}return best;});
+  var L=0, lens=[], PAWNY=9;
+  function recalcTrack(cfg){
+    L=track.getTotalLength(); done.style.strokeDasharray=L; PAWNY=cfg.pawnY;
+    lens=cfg.casas.map(function(c){var best=0,bd=1e9;for(var s=0;s<=L;s+=1.5){var p=track.getPointAtLength(s);var d=(p.x-c.x)*(p.x-c.x)+(p.y-c.y)*(p.y-c.y);if(d<bd){bd=d;best=s;}}return best;});
+  }
   var cur=0,target=0,anim=null,curIdx=0;
-  function place(len,hop){var p=track.getPointAtLength(len);pawn.setAttribute('transform','translate('+p.x+','+(p.y+9-hop)+')');done.style.strokeDashoffset=L-len;}
+  function place(len,hop){var p=track.getPointAtLength(len);pawn.setAttribute('transform','translate('+p.x+','+(p.y+PAWNY-hop)+')');done.style.strokeDashoffset=L-len;}
   place(0,0);
   function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
   function movePawn(idx){
@@ -697,7 +776,7 @@
     g.addEventListener('click',function(){goTo(i);}); tmT.appendChild(g);
   });
   tmP.appendChild(el('use',{href:'#pawnW',width:92,height:150,transform:'translate('+(60-16)+','+(66-52)+') scale(.35)'}));
-  function setMobile(idx){tmP.style.transform='translate('+(tmX[idx]-60)+'px,0)';tmD.setAttribute('x2',tmX[idx]);Array.prototype.forEach.call(tmT.children,function(d,i){d.classList.toggle('active',i===idx);});}
+  function setMobile(idx){if(!tmT||!tmP||!tmD)return;tmP.style.transform='translate('+(tmX[idx]-60)+'px,0)';tmD.setAttribute('x2',tmX[idx]);Array.prototype.forEach.call(tmT.children,function(d,i){d.classList.toggle('active',i===idx);});}
 
   /* dado — pips na face superior */
   /* dado real: faces opostas somam 7; só faces de um mesmo vértice aparecem */
@@ -712,11 +791,11 @@
   face(3);
 
   /* estado */
-  var tiles=document.querySelectorAll('.tile'),decks=[0,1,2].map(function(i){return document.getElementById('deck'+i);});
+  var tiles=[],decks=[0,1,2].map(function(i){return document.getElementById('deck'+i);});
   var placar=document.getElementById('placar'),ann=document.getElementById('announce'),fimDone=false;
   function setActive(idx,deckAll,fim){
     if(idx!==curIdx){curIdx=idx;movePawn(idx);ann.textContent='Você está na casa '+idx+': '+CASAS[idx].nm;}
-    tiles.forEach(function(t,i){t.classList.toggle('active',i===idx);}); document.getElementById('tiles').classList.add('has-active');
+    Array.prototype.forEach.call(tiles,function(t,i){t.classList.toggle('active',i===idx);}); document.getElementById('tiles').classList.add('has-active');
     decks.forEach(function(d){d.classList.toggle('active',!!deckAll);});
     setMobile(idx); placar.textContent='Casa '+idx+' de 8';
     if(history.replaceState){var h='#casa-'+idx;if(location.hash!==h)history.replaceState(null,'',h);}
@@ -765,6 +844,68 @@
   modal.addEventListener('click',function(e){if(e.target===modal)closeM();});
 
 
+  /* navegação entre cartas (celular) */
+  var NAV=[{i:0,nome:'Início'},{i:1,nome:'Cásper Líbero'},{i:2,nome:'MAPA'},{i:3,nome:'TJSP'},{i:4,nome:'Udacity'},{i:5,nome:'FMU'},{i:6,nome:'MBA'},{i:7,nome:'ENAP'},{i:8,nome:'MPA · hoje'}];
+  NAV.forEach(function(n){
+    var sec=document.getElementById('c-'+n.i); if(!sec) return;
+    var nav=document.createElement('div'); nav.className='cardnav';
+    var prev=document.createElement('button'), next=document.createElement('button');
+    prev.innerHTML='<span aria-hidden="true">←</span> Anterior';
+    prev.setAttribute('aria-label', n.i>0 ? ('Casa anterior: '+NAV[n.i-1].nome) : 'Casa anterior');
+    if(n.i===0) prev.setAttribute('disabled','');
+    else prev.addEventListener('click',function(){goTo(n.i-1);});
+    if(n.i<8){
+      next.innerHTML='Próxima <span aria-hidden="true">→</span>';
+      next.setAttribute('aria-label','Próxima casa: '+NAV[n.i+1].nome);
+      next.addEventListener('click',function(){goTo(n.i+1);});
+    }else{
+      next.innerHTML='Baralhos <span aria-hidden="true">→</span>';
+      next.setAttribute('aria-label','Ir para os baralhos');
+      next.addEventListener('click',function(){goSel('decks-sec');});
+    }
+    nav.appendChild(prev); nav.appendChild(next); sec.appendChild(nav);
+  });
+
+  /* botão flutuante: volta ao tabuleiro */
+  var fabB=document.getElementById('btnBoard');
+  if(fabB){
+    fabB.addEventListener('click',function(){
+      var mz=document.querySelector('.mesa');
+      if(mz) window.scrollTo({top:mz.getBoundingClientRect().top+window.scrollY-74,behavior:reduce?'auto':'smooth'});
+    });
+    var fabTick=false;
+    function fabCheck(){
+      fabTick=false;
+      if(MODE!=='m'){ fabB.classList.remove('show'); return; }
+      var mz=document.querySelector('.mesa'); if(!mz) return;
+      var r=mz.getBoundingClientRect();
+      var mostrar = r.bottom < 40;
+      // recua se estiver sobre os botões de navegação das cartas
+      if(mostrar){
+        var f=fabB.getBoundingClientRect();
+        var zona={left:innerWidth-f.width-14,right:innerWidth-14,top:innerHeight-f.height-16,bottom:innerHeight-16};
+        var navs=document.querySelectorAll('.cardnav');
+        for(var k=0;k<navs.length;k++){
+          var n=navs[k].getBoundingClientRect();
+          if(n.bottom>zona.top-10 && n.top<zona.bottom+10 && n.right>zona.left-10 && n.left<zona.right+10){ mostrar=false; break; }
+        }
+      }
+      fabB.classList.toggle('show', mostrar);
+    }
+    window.addEventListener('scroll',function(){if(!fabTick){fabTick=true;requestAnimationFrame(fabCheck);}},{passive:true});
+    window.addEventListener('resize',fabCheck);
+    setTimeout(fabCheck,300);
+  }
+
+  /* "Começar o jogo": no celular leva ao tabuleiro; no desktop, à primeira carta */
+  var cta=document.querySelector('.cta');
+  if(cta) cta.addEventListener('click',function(ev){
+    if(MODE==='m'){ ev.preventDefault();
+      var mz=document.querySelector('.mesa');
+      if(mz) window.scrollTo({top:mz.getBoundingClientRect().top+window.scrollY-74,behavior:'smooth'});
+    }
+  });
+
   /* voltar ao início */
   var bRe=document.getElementById('btnReplay');
   if(bRe) bRe.addEventListener('click',function(){ fimDone=false; goTo(0); });
@@ -784,10 +925,39 @@
 
   /* viewBox: no celular, foca no tabuleiro (sem a coluna de baralhos) */
   var boardSvg=document.getElementById('board');
-  function fitBoard(){
-    boardSvg.setAttribute('viewBox', window.innerWidth<=1080 ? '4 14 572 532' : '0 0 700 560');
+  function applyLayout(force){
+    var want = window.innerWidth<=1080 ? 'm' : 'd';
+    if(!force && want===MODE) return;
+    MODE=want; var cfg=LAYOUT[want]; CASAS=cfg.casas;
+    boardSvg.setAttribute('viewBox',cfg.viewBox);
+    var S=function(sel,a){var e=boardSvg.querySelector(sel);if(e)for(var k in a)e.setAttribute(k,a[k]);};
+    S('.spot',{cx:cfg.spot.cx,cy:cfg.spot.cy,rx:cfg.spot.rx,ry:cfg.spot.ry});
+    S('.board',{x:cfg.board.x,y:cfg.board.y,width:cfg.board.w,height:cfg.board.h});
+    S('.board-in',{x:cfg.bin.x,y:cfg.bin.y,width:cfg.bin.w,height:cfg.bin.h});
+    S('.board-in2',{x:cfg.bin2.x,y:cfg.bin2.y,width:cfg.bin2.w,height:cfg.bin2.h});
+    S('.ornament path',{d:cfg.orn});
+    var dots=boardSvg.querySelectorAll('.ornament circle');
+    for(var i=0;i<dots.length&&i<cfg.dots.length;i++){dots[i].setAttribute('cx',cfg.dots[i][0]);dots[i].setAttribute('cy',cfg.dots[i][1]);}
+    track.setAttribute('d',cfg.track); done.setAttribute('d',cfg.track);
+    document.getElementById('objDice').setAttribute('transform','translate('+cfg.dice.x+','+cfg.dice.y+') scale('+cfg.dice.s+')');
+    var pu=pawn.querySelector('use'), ps=cfg.pawnS;
+    if(pu) pu.setAttribute('transform','translate('+(-46*ps).toFixed(1)+','+(-150*ps+1).toFixed(1)+') scale('+ps+')');
+    // ordem no celular: bio primeiro, tabuleiro depois de explicado como jogar
+    var mesa=document.querySelector('.mesa'), shell=document.querySelector('.shell'), c0=document.getElementById('c-0');
+    if(want==='m'){
+      if(mesa.previousElementSibling!==c0) c0.insertAdjacentElement('afterend',mesa);
+    }else{
+      if(shell.firstElementChild!==mesa) shell.insertBefore(mesa,shell.firstElementChild);
+    }
+    var cue=mesa.querySelector('.scroll-cue span:first-child');
+    if(cue) cue.textContent = (want==='m') ? 'role para ver as cartas' : 'deslize para jogar';
+    buildTiles(cfg); recalcTrack(cfg);
+    tiles=gT.querySelectorAll('.tile'); gT.classList.add('has-active');
+    Array.prototype.forEach.call(tiles,function(t,i){t.classList.toggle('active',i===curIdx);});
+    cur=lens[curIdx]; place(cur,0);
   }
-  fitBoard(); window.addEventListener('resize',fitBoard);
+  applyLayout(true);
+  var rsT; window.addEventListener('resize',function(){clearTimeout(rsT);rsT=setTimeout(applyLayout,150);});
 
   /* progresso */
   var prog=document.getElementById('progress');
