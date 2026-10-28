@@ -517,6 +517,49 @@
   body.ler-tudo .citem .ar{display:none}
   body.ler-tudo .player img,body.ler-tudo .player .foto{max-width:120px}
 
+
+  /* ===== COMPROVANTES =====
+     lista enxuta, sem miniatura: ninguem decide nada olhando o thumb de um diploma */
+  .cert-tit{font-size:clamp(1.5rem,2.6vw,2rem);font-weight:700;color:var(--parch);line-height:1.2}
+  .cert-nota{margin-top:var(--s2);color:rgba(243,233,210,.85);font-size:var(--fs-sm);max-width:56ch}
+  .cert-nota a{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px;
+    padding:6px 1px;display:inline-block}
+  .cert-nota a:hover{color:var(--parch)}
+  .cert-box{margin-top:var(--s4);padding:clamp(22px,2.6vw,32px)}
+  .cert-g{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:var(--s2);
+    padding-bottom:var(--s2);border-bottom:1.5px solid var(--line)}
+  .cert-g+.cert-lista{margin-bottom:var(--s5)}
+  .cert-lista:last-child{margin-bottom:0}
+  .cert-n{font-size:var(--fs-3xs);border:1.3px solid var(--line);border-radius:20px;
+    padding:1px 7px;color:var(--muted);font-weight:600}
+  .cert-lista{list-style:none;margin:0;padding:0}
+  .cert-lista li{display:flex;align-items:center;gap:var(--s4);padding:var(--s3) 0;
+    border-bottom:1px solid rgba(26,26,26,.10)}
+  .cert-lista li:last-child{border-bottom:0}
+  .ci{min-width:0;flex:1 1 auto;display:flex;flex-direction:column;gap:2px}
+  .ct{font-family:var(--disp);font-weight:700;font-size:var(--fs-md);color:var(--ink);line-height:1.3}
+  .cm{font-family:var(--mono);font-size:var(--fs-3xs);letter-spacing:.06em;color:var(--muted)}
+  .cn{font-size:var(--fs-2xs);color:var(--ink-2);font-style:italic;line-height:1.45;margin-top:3px}
+  .cbx{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+    min-height:var(--ctl-md);padding:0 var(--s3);border:1.5px solid var(--ink);border-radius:3px;
+    background:var(--parch-2);color:var(--ink);font-family:var(--mono);font-weight:700;
+    font-size:var(--fs-3xs);letter-spacing:.1em;transition:var(--t-fast)}
+  .cbx svg{width:15px;height:15px}
+  .cbx:hover{background:var(--ink);color:var(--parch);transform:translateY(-1px)}
+  .cbx:active{transform:translateY(1px)}
+  @media(max-width:1080px){
+    .cert-lista li{flex-direction:column;align-items:stretch;gap:var(--s2);padding:var(--s3) 0}
+    .cbx{align-self:flex-start}
+    .ct{font-size:var(--fs-sm)}
+  }
+  @media print{
+    .cert-nota a,.cbx{display:none}
+    .cert-tit,.cert-g,.ct,.cm,.cn,.cert-nota{color:#000!important}
+    .cert-box{background:none!important;border:1px solid #000}
+    .cert-lista li{break-inside:avoid}
+  }
+
   /* ===== MOBILE ===== */
   .trail-m{display:none}.fab-board{display:none}
   @media(max-width:1080px){
@@ -956,6 +999,123 @@
           <div class="lv">Intermediário</div>
           <div class="pips" role="img" aria-label="Nível intermediário: 3 de 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
         </div>
+      </div>
+    </section>
+
+    <section class="sec" id="certificados" data-casa="8">
+      <div class="eyebrow"><span class="chip">◆</span><span class="sc">Carta extra · comprovantes</span></div>
+      <h2 class="cert-tit">Diplomas e certificados</h2>
+      <p class="cert-nota">Os arquivos abrem com senha, para não deixar meus documentos pessoais soltos na internet. <a href="mailto:alexandrejgcamargo@gmail.com?subject=Senha%20dos%20certificados">Me peça a senha</a> e eu envio.</p>
+      <div class="paper cert-box">
+        <h3 class="cert-g">Graduação <span class="cert-n">2</span></h3>
+        <ul class="cert-lista">
+          <li>
+            <div class="ci">
+              <b class="ct">Bacharelado em Comunicação Social — Jornalismo</b>
+              <span class="cm">Faculdade Cásper Líbero · 2013</span>
+            </div>
+            <a class="cbx" href="certificados/graduacao-jornalismo-casper-libero.pdf" download aria-label="Baixar o comprovante: Bacharelado em Comunicação Social — Jornalismo"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Bacharelado em Administração</b>
+              <span class="cm">Centro Universitário FMU · 2023</span>
+            </div>
+            <a class="cbx" href="certificados/graduacao-administracao-fmu.pdf" download aria-label="Baixar o comprovante: Bacharelado em Administração"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+        </ul>
+        <h3 class="cert-g">Pós-graduação e MBA <span class="cert-n">2</span></h3>
+        <ul class="cert-lista">
+          <li>
+            <div class="ci">
+              <b class="ct">Especialização em Políticas Públicas e Gestão Governamental</b>
+              <span class="cm">Enap · 2026 · 580 h</span>
+              <span class="cn">Pós-graduação <i>lato sensu</i> — 18ª edição do Programa de Formação Inicial para EPPGG</span>
+            </div>
+            <a class="cbx" href="certificados/especializacao-eppgg-enap.pdf" download aria-label="Baixar o comprovante: Especialização em Políticas Públicas e Gestão Governamental"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">MBA em Design Thinking e Gestão de Pessoas</b>
+              <span class="cm">Centro Universitário União das Américas · 2024 · 390 h</span>
+            </div>
+            <a class="cbx" href="certificados/mba-design-thinking-gestao-pessoas-uniamerica.pdf" download aria-label="Baixar o comprovante: MBA em Design Thinking e Gestão de Pessoas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+        </ul>
+        <h3 class="cert-g">Cursos e certificações <span class="cert-n">10</span></h3>
+        <ul class="cert-lista">
+          <li>
+            <div class="ci">
+              <b class="ct">Servidores do Futuro: Gestão de Pessoas</b>
+              <span class="cm">Enap · 2026 · 30 h</span>
+            </div>
+            <a class="cbx" href="certificados/servidores-do-futuro-gestao-pessoas-enap.pdf" download aria-label="Baixar o comprovante: Servidores do Futuro: Gestão de Pessoas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Acesso à Informação</b>
+              <span class="cm">Enap · 2026 · 25 h</span>
+            </div>
+            <a class="cbx" href="certificados/acesso-a-informacao-enap.pdf" download aria-label="Baixar o comprovante: Acesso à Informação"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Análise e Melhoria de Processos</b>
+              <span class="cm">Enap · 2026 · 20 h</span>
+            </div>
+            <a class="cbx" href="certificados/analise-melhoria-processos-enap.pdf" download aria-label="Baixar o comprovante: Análise e Melhoria de Processos"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Inovação e Mudança</b>
+              <span class="cm">Enap · 2026 · 145 h</span>
+              <span class="cn">Certificado unificado do programa — inclui Princípios do Design Thinking, Uso do Design em Políticas Públicas e Gestão da Inovação no Setor Público</span>
+            </div>
+            <a class="cbx" href="certificados/programa-inovacao-e-mudanca-enap.pdf" download aria-label="Baixar o comprovante: Inovação e Mudança"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Gestão Pessoal: Base da Liderança</b>
+              <span class="cm">Enap · 2026 · 50 h</span>
+            </div>
+            <a class="cbx" href="certificados/gestao-pessoal-base-lideranca-enap.pdf" download aria-label="Baixar o comprovante: Gestão Pessoal: Base da Liderança"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct">Nanodegree em Marketing Digital</b>
+              <span class="cm">Udacity · 2019</span>
+            </div>
+            <a class="cbx" href="certificados/nanodegree-marketing-digital-udacity.pdf" download aria-label="Baixar o comprovante: Nanodegree em Marketing Digital"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct"><span lang="en">Exploring Emerging Technologies for Lifelong Learning and Success</span></b>
+              <span class="cm">The State University of New York · Coursera · 2018</span>
+            </div>
+            <a class="cbx" href="certificados/emerging-technologies-suny-coursera.pdf" download aria-label="Baixar o comprovante: Exploring Emerging Technologies for Lifelong Learning and Success"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct"><span lang="en">Mindshift: Break Through Obstacles to Learning</span></b>
+              <span class="cm">McMaster University · Coursera · 2017</span>
+            </div>
+            <a class="cbx" href="certificados/mindshift-mcmaster-coursera.pdf" download aria-label="Baixar o comprovante: Mindshift: Break Through Obstacles to Learning"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct"><span lang="en">Fundamentals of Graphic Design</span></b>
+              <span class="cm">California Institute of the Arts · Coursera · 2017</span>
+            </div>
+            <a class="cbx" href="certificados/fundamentals-graphic-design-calarts-coursera.pdf" download aria-label="Baixar o comprovante: Fundamentals of Graphic Design"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+          <li>
+            <div class="ci">
+              <b class="ct"><span lang="en">Learning How to Learn</span></b>
+              <span class="cm">University of California San Diego · Coursera · 2015</span>
+            </div>
+            <a class="cbx" href="certificados/learning-how-to-learn-ucsd-coursera.pdf" download aria-label="Baixar o comprovante: Learning How to Learn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+          </li>
+        </ul>
       </div>
     </section>
 
