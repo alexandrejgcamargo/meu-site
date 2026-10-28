@@ -2152,7 +2152,11 @@
   // voltavam fechados: o navegador entao devolvia o visitante ao lugar errado.
   // Guarda o que estava aberto e a posicao, e devolve os dois ao retornar.
   (function(){
-    var KA='xan-comprovantes', KY='xan-scroll';
+    var KA='xan-comprovantes', KY='xan-scroll', KT='xan-quando';
+    // o Safari do iPhone descarrega abas em segundo plano: ao voltar do PDF a pagina
+    // recarrega do zero e a navegacao nem conta como 'voltar'. Por isso a posicao e
+    // gravada durante a rolagem, e nao so na saida, e devolvida tambem nesse caso.
+    var guardaT=null;
     function guarda(){
       try{
         var ab=[];
@@ -2160,25 +2164,51 @@
           function(d,i){ if(d.open) ab.push(i); });
         sessionStorage.setItem(KA, JSON.stringify(ab));
         sessionStorage.setItem(KY, String(Math.round(window.scrollY)));
+        sessionStorage.setItem(KT, String(Date.now()));
       }catch(e){}
     }
     window.addEventListener('pagehide', guarda);
     window.addEventListener('beforeunload', guarda);
-    try{
-      var gs=document.querySelectorAll('.cert-grupo');
-      var ab=JSON.parse(sessionStorage.getItem(KA)||'[]');
-      ab.forEach(function(i){ if(gs[i]) gs[i].open=true; });
-      var nav=(performance.getEntriesByType('navigation')||[])[0];
-      if(nav && nav.type==='back_forward'){
+    window.addEventListener('visibilitychange', function(){
+      if(document.visibilityState==='hidden') guarda();
+    });
+    window.addEventListener('scroll', function(){
+      clearTimeout(guardaT); guardaT=setTimeout(guarda,400);
+    },{passive:true});
+    Array.prototype.forEach.call(document.querySelectorAll('.cert-grupo'),function(d){
+      d.addEventListener('toggle',guarda);
+    });
+
+    function devolveLugar(){
+      try{
+        var gs=document.querySelectorAll('.cert-grupo');
+        var ab=JSON.parse(sessionStorage.getItem(KA)||'[]');
+        ab.forEach(function(i){ if(gs[i]) gs[i].open=true; });
+
+        // '#casa-N' e escrito pela propria rolagem, nao e escolha de ninguem:
+        // so um endereco pedido de proposito tem prioridade sobre a memoria
+        var h=location.hash;
+        if(h && !/^#casa-\d$/.test(h)) return;
         var y=parseInt(sessionStorage.getItem(KY)||'0',10);
-        if(y>0){
-          var devolve=function(){
-            if(Math.abs(window.scrollY-y)>120) window.scrollTo(0,y);
-          };
-          setTimeout(devolve,120); setTimeout(devolve,420); setTimeout(devolve,900);
-        }
-      }
-    }catch(e){}
+        if(!(y>0)) return;
+        var nav=(performance.getEntriesByType('navigation')||[])[0];
+        var voltou = nav && nav.type==='back_forward';
+        // aba descarregada e recarregada conta como 'navigate': so vale se o
+        // registro for recente, senao quem volta amanha cairia no meio do site
+        var quando=parseInt(sessionStorage.getItem(KT)||'0',10);
+        var recente = quando>0 && (Date.now()-quando)<180000;   // 3 minutos
+        if(!voltou && !recente) return;
+
+        var devolve=function(){
+          if(Math.abs(window.scrollY-y)>120) window.scrollTo(0,y);
+        };
+        devolve();
+        [80,250,600,1100,1800].forEach(function(t){ setTimeout(devolve,t); });
+      }catch(e){}
+    }
+    devolveLugar();
+    // o Safari tambem devolve a pagina do cache sem reexecutar o script
+    window.addEventListener('pageshow', function(ev){ if(ev.persisted) devolveLugar(); });
   })();
   // clicar num mailto nao faz nada em quem nao tem cliente de e-mail configurado:
   // o endereco vai para a area de transferencia de qualquer jeito, com aviso na tela
