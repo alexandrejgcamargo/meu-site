@@ -1680,6 +1680,22 @@
     });
   }
   var cur=0,target=0,anim=null,curIdx=0,TAB=null,TABP=2;
+  var restaurandoEm=0;   // quando a posicao guardada foi devolvida
+  // decidido uma unica vez: ou manda a posicao guardada, ou manda o endereco.
+  // os dois disputando era o que produzia os pulos ao voltar de um PDF.
+  var vaiRestaurar=(function(){
+    try{
+      var h=location.hash;
+      if(h && !/^#casa-\d$/.test(h)) return false;    // endereco pedido de proposito vence
+      var y=parseInt(sessionStorage.getItem('xan-scroll')||'0',10);
+      if(!(y>0)) return false;
+      var nav=(performance.getEntriesByType('navigation')||[])[0];
+      var voltou=nav && nav.type==='back_forward';
+      var q=parseInt(sessionStorage.getItem('xan-quando')||'0',10);
+      var recente=q>0 && (Date.now()-q)<180000;
+      return !!(voltou||recente);
+    }catch(e){ return false; }
+  })();
   function place(len,hop){
     var p;
     if(TAB&&TAB.length){
@@ -1964,6 +1980,9 @@
   if(location.hash==='#ler-tudo') setLerTudo(true);
   // responde a voltar/avancar do navegador e a edicao do endereco
   window.addEventListener('popstate',function(){
+    // ao voltar de um PDF este evento dispara junto com a restauracao da posicao
+    // guardada; ir para a casa do endereco aqui desfazia o que acabou de ser feito
+    if(Date.now()-restaurandoEm < 2500) return;
     var mm=location.hash.match(/^#casa-(\d)$/);
     if(mm){var sx=document.getElementById('c-'+mm[1]); if(sx) sx.scrollIntoView({behavior:'auto',block:'start'});}
   });
@@ -2047,6 +2066,7 @@
     // o tabuleiro so define a altura da pagina depois de montado e das fontes carregarem;
     // rolar antes disso erra o alvo, entao reposiciona ate a secao assentar no topo
     var irAoAlvo=function(){
+      if(vaiRestaurar) return;        // a posicao guardada tem prioridade
       var s=document.getElementById('c-'+hAlvo); if(!s) return;
       if(Math.abs(s.getBoundingClientRect().top-80)<44) return;
       s.scrollIntoView({behavior:'auto',block:'start'});
@@ -2153,6 +2173,8 @@
   // Guarda o que estava aberto e a posicao, e devolve os dois ao retornar.
   (function(){
     var KA='xan-comprovantes', KY='xan-scroll', KT='xan-quando';
+    // a restauracao automatica do navegador brigava com a nossa e causava salto
+    try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
     // o Safari do iPhone descarrega abas em segundo plano: ao voltar do PDF a pagina
     // recarrega do zero e a navegacao nem conta como 'voltar'. Por isso a posicao e
     // gravada durante a rolagem, e nao so na saida, e devolvida tambem nesse caso.
@@ -2187,23 +2209,26 @@
 
         // '#casa-N' e escrito pela propria rolagem, nao e escolha de ninguem:
         // so um endereco pedido de proposito tem prioridade sobre a memoria
-        var h=location.hash;
-        if(h && !/^#casa-\d$/.test(h)) return;
+        if(!vaiRestaurar) return;
         var y=parseInt(sessionStorage.getItem(KY)||'0',10);
         if(!(y>0)) return;
-        var nav=(performance.getEntriesByType('navigation')||[])[0];
-        var voltou = nav && nav.type==='back_forward';
-        // aba descarregada e recarregada conta como 'navigate': so vale se o
-        // registro for recente, senao quem volta amanha cairia no meio do site
-        var quando=parseInt(sessionStorage.getItem(KT)||'0',10);
-        var recente = quando>0 && (Date.now()-quando)<180000;   // 3 minutos
-        if(!voltou && !recente) return;
 
-        var devolve=function(){
-          if(Math.abs(window.scrollY-y)>120) window.scrollTo(0,y);
-        };
-        devolve();
-        [80,250,600,1100,1800].forEach(function(t){ setTimeout(devolve,t); });
+        // seis scrollTo espalhados no tempo, disputando com a restauracao do
+        // navegador, produziam exatamente os pulos que queriam evitar.
+        // Agora: uma unica colocacao, quando o layout para de mudar de altura.
+        restaurandoEm=Date.now();
+        var ultima=-1, parado=0, voltas=0;
+        (function aguarda(){
+          var h=document.documentElement.scrollHeight;
+          if(h===ultima){ parado++; } else { parado=0; ultima=h; }
+          voltas++;
+          if(parado>=4 || voltas>90){          // ~4 quadros estaveis, ou desiste em 1,5s
+            window.scrollTo(0,y);
+            restaurandoEm=Date.now();
+            return;
+          }
+          requestAnimationFrame(aguarda);
+        })();
       }catch(e){}
     }
     devolveLugar();
