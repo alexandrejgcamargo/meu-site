@@ -202,6 +202,10 @@
   .obj:hover .tip,.obj:focus-visible .tip{opacity:1}
   .obj .tip rect{fill:var(--ink)}
   .obj .tip text{fill:var(--parch);font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:1px;text-anchor:middle;dominant-baseline:central}
+  /* o drop-shadow difuso nao forma contorno: o dado fica sobre papel claro e
+     o halo creme desaparecia. Um retangulo desenhado resolve, como nas casas */
+  .anel-foco{fill:none;stroke:none;stroke-width:3.5;pointer-events:none}
+  .obj:focus-visible .anel-foco{stroke:var(--ink);stroke-dasharray:none}
   .obj:focus-visible{filter:drop-shadow(0 0 0 #1A1A1A) drop-shadow(0 0 2px #1A1A1A)
     drop-shadow(0 0 5px #FBF4E4) drop-shadow(0 0 9px #FBF4E4)}
   .steam{fill:none;stroke:var(--smoke);stroke-width:3;stroke-linecap:round;opacity:0;animation:steam 3.2s ease-in-out infinite}
@@ -355,7 +359,9 @@
 
   /* baralhos */
   .decks{display:grid;gap:var(--s4)}
-  .deckbox{padding:var(--s5) var(--s6)}
+  .deckbox{padding:var(--s5) var(--s6);transition:box-shadow var(--t-base),transform var(--t-base)}
+  .deckbox.realce{box-shadow:0 0 0 3px var(--gold),0 0 0 6px var(--ink);transform:translateY(-3px)}
+  @media (prefers-reduced-motion:reduce){.deckbox{transition:none}.deckbox.realce{transform:none}}
   .deckbox .dh{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3)}
   .deckbox .sw{width:34px;height:46px;border-radius:4px;border:2px solid var(--ink);flex-shrink:0;position:relative;background:var(--dk)}
   .deckbox .sw::after{content:"";position:absolute;inset:4px;border:1px solid var(--gold);border-radius:2px}
@@ -541,6 +547,7 @@
   .cert-n{flex:0 0 auto;font-family:var(--mono);font-size:var(--fs-3xs);font-weight:700;
     border:1.3px solid var(--ink);border-radius:20px;padding:2px 9px;color:var(--ink);
     background:var(--parch-2)}
+  .cert-g>svg{flex:0 0 auto;width:19px;height:19px}
   .cg-seta{flex:0 0 auto;width:19px;height:19px;color:var(--muted);
     transition:transform var(--t-base) var(--ease)}
   .cert-grupo[open] .cg-seta{transform:rotate(180deg);color:var(--ink)}
@@ -558,12 +565,25 @@
     min-height:var(--ctl-md);padding:0 var(--s3);border:1.5px solid var(--ink);border-radius:3px;
     background:var(--parch-2);color:var(--ink);font-family:var(--mono);font-weight:700;
     font-size:var(--fs-3xs);letter-spacing:.1em;transition:var(--t-fast)}
+  .cacoes{flex:0 0 auto;display:flex;align-items:center;gap:var(--s2)}
+  .cbx-ver{background:var(--ink);color:var(--parch);border-color:var(--ink)}
+  .cbx-ver:hover{background:var(--bordo);border-color:var(--bordo);color:var(--parch)}
+  .ccod{font-family:var(--mono);font-size:var(--fs-3xs);color:var(--muted);margin-top:3px}
+  .ctarja{font-size:var(--fs-2xs);color:var(--ink-2);margin-top:4px;line-height:1.45;
+    border-left:3px solid var(--gold);padding-left:var(--s2)}
+  .ctarja a{color:#5F1919;font-weight:700;text-decoration:underline;text-underline-offset:2px;
+    display:inline-block;min-height:24px;line-height:24px;padding:0 2px}
+  .ctarja a:hover{color:var(--bordo)}
+  .cert-nota abbr{text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+  .ccod code{font-family:var(--mono);background:var(--parch-2);border:1px solid var(--line);
+    border-radius:3px;padding:1px 5px;color:var(--ink-2);word-break:break-all;font-size:.95em}
   .cbx svg{width:15px;height:15px}
   .cbx:hover{background:var(--ink);color:var(--parch);transform:translateY(-1px)}
   .cbx:active{transform:translateY(1px)}
   @media(max-width:1080px){
     .cert-lista li{flex-direction:column;align-items:stretch;gap:var(--s2);padding:var(--s3) 0}
-    .cbx{align-self:flex-start}
+    .cacoes{flex-wrap:wrap}
+    .cbx{flex:1 1 auto;justify-content:center}
     .ct{font-size:var(--fs-sm)}
   }
   @media print{
@@ -572,7 +592,14 @@
     .cert-grupo{border:0;background:none!important;margin-bottom:8pt}
     .cert-g{background:none!important;border-bottom:1px solid #000!important;padding:0 0 3pt}
     .cg-seta{display:none}
-    .cert-nota a,.cbx{display:none}
+    /* o link precisa virar texto no papel, com o endereco visivel,
+       senao a frase fica sem sentido para quem recebe impresso */
+    .cacoes{display:none}
+    .cert-nota a{display:inline;color:#000!important;text-decoration:none;font-weight:700}
+    .cert-nota a::after{content:" (" attr(data-email) ")";font-weight:400}
+    .ctarja{color:#000!important;border-color:#000!important}
+    .ccod{color:#000!important}
+    .ccod code{background:none;border:0;padding:0}
     .cert-tit,.cert-g,.ct,.cm,.cn,.cert-nota{color:#000!important}
     .cert-box{background:none!important;border:1px solid #000}
     .cert-lista li{break-inside:avoid}
@@ -714,6 +741,8 @@
     .front li{break-inside:avoid}
     .paper{break-inside:avoid}
     footer{break-before:avoid;margin-top:8pt;padding-top:6pt}
+    #certificados{break-inside:auto}
+    #certificados .cert-box{break-inside:auto}
     .fim{break-inside:auto}
     .clist{break-inside:avoid}
     @page{margin:14mm}
@@ -821,6 +850,7 @@
 
       <!-- DADO: cubo isométrico apoiado no centro do tabuleiro -->
       <g class="obj dice" id="objDice" tabindex="0" role="button" aria-label="Rolar o dado (tecla R)" transform="translate(290,276)">
+        <rect class="anel-foco" x="-66" y="-70" width="132" height="178" rx="8"/>
         <ellipse class="dshadow" cx="3" cy="72" rx="60" ry="12.5"/>
         <g class="die" id="die">
           <g clip-path="url(#dieClip)">
@@ -1023,122 +1053,175 @@
     <section class="sec" id="certificados" data-casa="8">
       <div class="eyebrow"><span class="chip">◆</span><span class="sc">Carta extra · comprovantes</span></div>
       <h2 class="cert-tit">Diplomas e certificados</h2>
-      <p class="cert-nota">Os arquivos abrem com senha, para não deixar meus documentos pessoais soltos na internet. <a href="mailto:alexandrejgcamargo@gmail.com?subject=Senha%20dos%20certificados">Solicite a senha</a> que eu envio.</p>
+      <p class="cert-nota">Quase todos podem ser conferidos direto na instituição, sem baixar nada. Em três documentos, o RG, o CPF e a data de nascimento aparecem tarjados: esses dados não são necessários para comprovar formação, e a <abbr title="Lei nº 13.709/2018">LGPD</abbr> pede que o tratamento se limite ao mínimo necessário (art. 6º, III). Se precisar de algum documento íntegro, <a id="pedeSenha" href="mailto:alexandrejgcamargo@gmail.com?subject=Senha%20dos%20certificados" data-email="alexandrejgcamargo@gmail.com">solicite a senha</a> que eu envio.</p>
       <div class="paper cert-box">
         <details class="cert-grupo">
           <summary class="cert-g"><span class="cg-tit">Graduação</span><span class="cert-n">2</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <ul class="cert-lista">
-          <li>
-            <div class="ci">
-              <b class="ct">Bacharelado em Comunicação Social — Jornalismo</b>
-              <span class="cm">Faculdade Cásper Líbero · 2013</span>
-            </div>
-            <a class="cbx" href="certificados/graduacao-jornalismo-casper-libero.pdf" download aria-label="Baixar o comprovante: Bacharelado em Comunicação Social — Jornalismo"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Bacharelado em Administração</b>
-              <span class="cm">Centro Universitário FMU · 2023</span>
-            </div>
-            <a class="cbx" href="certificados/graduacao-administracao-fmu.pdf" download aria-label="Baixar o comprovante: Bacharelado em Administração"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-        </ul>
+          <ul class="cert-lista">
+            <li>
+              <div class="ci">
+                <b class="ct">Bacharelado em Comunicação Social — Jornalismo</b>
+                <span class="cm">Faculdade Cásper Líbero · 2013</span>
+                <span class="ccod">Registro USP nº 1657310</span>
+                <span class="ctarja">Com tarja nos dados pessoais · <a href="certificados/integros/graduacao-jornalismo-casper-libero.pdf" download>versão íntegra</a> abre com senha</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx" href="certificados/graduacao-jornalismo-casper-libero.pdf" download aria-label="Baixar: Bacharelado em Comunicação Social — Jornalismo"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Bacharelado em Administração</b>
+                <span class="cm">Centro Universitário FMU · 2023</span>
+                <span class="ccod">código <code>374.374.766eee5b83fa</code></span>
+                <span class="ctarja">Com tarja nos dados pessoais · <a href="certificados/integros/graduacao-administracao-fmu.pdf" download>versão íntegra</a> abre com senha</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://diploma-digital.fmu.br/#/374.374.766eee5b83fa" target="_blank" rel="noopener" aria-label="Verificar na instituição: Bacharelado em Administração (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/graduacao-administracao-fmu.pdf" download aria-label="Baixar: Bacharelado em Administração"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+          </ul>
         </details>
         <details class="cert-grupo">
           <summary class="cert-g"><span class="cg-tit">Pós-graduação e MBA</span><span class="cert-n">2</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <ul class="cert-lista">
-          <li>
-            <div class="ci">
-              <b class="ct">Especialização em Políticas Públicas e Gestão Governamental</b>
-              <span class="cm">Enap · 2026 · 580 h</span>
-              <span class="cn">Pós-graduação <i>lato sensu</i> — 18ª edição do Programa de Formação Inicial para EPPGG</span>
-            </div>
-            <a class="cbx" href="certificados/especializacao-eppgg-enap.pdf" download aria-label="Baixar o comprovante: Especialização em Políticas Públicas e Gestão Governamental"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">MBA em Design Thinking e Gestão de Pessoas</b>
-              <span class="cm">Centro Universitário União das Américas · 2024 · 390 h</span>
-            </div>
-            <a class="cbx" href="certificados/mba-design-thinking-gestao-pessoas-uniamerica.pdf" download aria-label="Baixar o comprovante: MBA em Design Thinking e Gestão de Pessoas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-        </ul>
+          <ul class="cert-lista">
+            <li>
+              <div class="ci">
+                <b class="ct">Especialização em Políticas Públicas e Gestão Governamental</b>
+                <span class="cm">Enap · 2026 · 580 h</span>
+                <span class="cn">Pós-graduação <i>lato sensu</i> — 18ª edição do Programa de Formação Inicial para EPPGG</span>
+                <span class="ccod">código <code>3c7b53fa03</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao/?comp_doc=3c7b53fa03" target="_blank" rel="noopener" aria-label="Verificar na instituição: Especialização em Políticas Públicas e Gestão Governamental (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/especializacao-eppgg-enap.pdf" download aria-label="Baixar: Especialização em Políticas Públicas e Gestão Governamental"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">MBA em Design Thinking e Gestão de Pessoas</b>
+                <span class="cm">Centro Universitário União das Américas · 2024 · 390 h</span>
+                <span class="ccod">Registro nº 202456/2024</span>
+                <span class="ctarja">Com tarja nos dados pessoais · <a href="certificados/integros/mba-design-thinking-gestao-pessoas-uniamerica.pdf" download>versão íntegra</a> abre com senha</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://descomplica.jacad.com.br/academico/docs/about/154619DC002R216332" target="_blank" rel="noopener" aria-label="Verificar na instituição: MBA em Design Thinking e Gestão de Pessoas (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/mba-design-thinking-gestao-pessoas-uniamerica.pdf" download aria-label="Baixar: MBA em Design Thinking e Gestão de Pessoas"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+          </ul>
         </details>
         <details class="cert-grupo">
           <summary class="cert-g"><span class="cg-tit">Cursos e certificações</span><span class="cert-n">10</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <ul class="cert-lista">
-          <li>
-            <div class="ci">
-              <b class="ct">Servidores do Futuro: Gestão de Pessoas</b>
-              <span class="cm">Enap · 2026 · 30 h</span>
-            </div>
-            <a class="cbx" href="certificados/servidores-do-futuro-gestao-pessoas-enap.pdf" download aria-label="Baixar o comprovante: Servidores do Futuro: Gestão de Pessoas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Acesso à Informação</b>
-              <span class="cm">Enap · 2026 · 25 h</span>
-            </div>
-            <a class="cbx" href="certificados/acesso-a-informacao-enap.pdf" download aria-label="Baixar o comprovante: Acesso à Informação"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Análise e Melhoria de Processos</b>
-              <span class="cm">Enap · 2026 · 20 h</span>
-            </div>
-            <a class="cbx" href="certificados/analise-melhoria-processos-enap.pdf" download aria-label="Baixar o comprovante: Análise e Melhoria de Processos"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Inovação e Mudança</b>
-              <span class="cm">Enap · 2026 · 145 h</span>
-              <span class="cn">Certificado unificado do programa — inclui Princípios do Design Thinking, Uso do Design em Políticas Públicas e Gestão da Inovação no Setor Público</span>
-            </div>
-            <a class="cbx" href="certificados/programa-inovacao-e-mudanca-enap.pdf" download aria-label="Baixar o comprovante: Inovação e Mudança"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Gestão Pessoal: Base da Liderança</b>
-              <span class="cm">Enap · 2026 · 50 h</span>
-            </div>
-            <a class="cbx" href="certificados/gestao-pessoal-base-lideranca-enap.pdf" download aria-label="Baixar o comprovante: Gestão Pessoal: Base da Liderança"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct">Nanodegree em Marketing Digital</b>
-              <span class="cm">Udacity · 2019</span>
-            </div>
-            <a class="cbx" href="certificados/nanodegree-marketing-digital-udacity.pdf" download aria-label="Baixar o comprovante: Nanodegree em Marketing Digital"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct"><span lang="en">Exploring Emerging Technologies for Lifelong Learning and Success</span></b>
-              <span class="cm">The State University of New York · Coursera · 2018</span>
-            </div>
-            <a class="cbx" href="certificados/emerging-technologies-suny-coursera.pdf" download aria-label="Baixar o comprovante: Exploring Emerging Technologies for Lifelong Learning and Success"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct"><span lang="en">Mindshift: Break Through Obstacles to Learning</span></b>
-              <span class="cm">McMaster University · Coursera · 2017</span>
-            </div>
-            <a class="cbx" href="certificados/mindshift-mcmaster-coursera.pdf" download aria-label="Baixar o comprovante: Mindshift: Break Through Obstacles to Learning"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct"><span lang="en">Fundamentals of Graphic Design</span></b>
-              <span class="cm">California Institute of the Arts · Coursera · 2017</span>
-            </div>
-            <a class="cbx" href="certificados/fundamentals-graphic-design-calarts-coursera.pdf" download aria-label="Baixar o comprovante: Fundamentals of Graphic Design"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-          <li>
-            <div class="ci">
-              <b class="ct"><span lang="en">Learning How to Learn</span></b>
-              <span class="cm">University of California San Diego · Coursera · 2015</span>
-            </div>
-            <a class="cbx" href="certificados/learning-how-to-learn-ucsd-coursera.pdf" download aria-label="Baixar o comprovante: Learning How to Learn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
-          </li>
-        </ul>
+          <ul class="cert-lista">
+            <li>
+              <div class="ci">
+                <b class="ct">Servidores do Futuro: Gestão de Pessoas</b>
+                <span class="cm">Enap · 2026 · 30 h</span>
+                <span class="ccod">código <code>b74b7b6146</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao/?comp_doc=b74b7b6146" target="_blank" rel="noopener" aria-label="Verificar na instituição: Servidores do Futuro: Gestão de Pessoas (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/servidores-do-futuro-gestao-pessoas-enap.pdf" download aria-label="Baixar: Servidores do Futuro: Gestão de Pessoas"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Acesso à Informação</b>
+                <span class="cm">Enap · 2026 · 25 h</span>
+                <span class="ccod">código <code>ad2e4fcd-ad37-40be-924b-8285a094bbb3</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao" target="_blank" rel="noopener" aria-label="Verificar na instituição: Acesso à Informação (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/acesso-a-informacao-enap.pdf" download aria-label="Baixar: Acesso à Informação"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Análise e Melhoria de Processos</b>
+                <span class="cm">Enap · 2026 · 20 h</span>
+                <span class="ccod">código <code>30a0def3-5c7f-49d9-b0ea-8620e6228f4b</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao" target="_blank" rel="noopener" aria-label="Verificar na instituição: Análise e Melhoria de Processos (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/analise-melhoria-processos-enap.pdf" download aria-label="Baixar: Análise e Melhoria de Processos"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Inovação e Mudança</b>
+                <span class="cm">Enap · 2026 · 145 h</span>
+                <span class="cn">Certificado unificado do programa — inclui Princípios do Design Thinking, Uso do Design em Políticas Públicas e Gestão da Inovação no Setor Público</span>
+                <span class="ccod">código <code>726a32c1-9992-45a6-965a-728eb215a141</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao" target="_blank" rel="noopener" aria-label="Verificar na instituição: Inovação e Mudança (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/programa-inovacao-e-mudanca-enap.pdf" download aria-label="Baixar: Inovação e Mudança"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Gestão Pessoal: Base da Liderança</b>
+                <span class="cm">Enap · 2026 · 50 h</span>
+                <span class="ccod">código <code>8730f39a-bf17-4214-8c47-a78d2061b9c6</code></span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://www.escolavirtual.gov.br/documentos/validacao" target="_blank" rel="noopener" aria-label="Verificar na instituição: Gestão Pessoal: Base da Liderança (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/gestao-pessoal-base-lideranca-enap.pdf" download aria-label="Baixar: Gestão Pessoal: Base da Liderança"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct">Nanodegree em Marketing Digital</b>
+                <span class="cm">Udacity · 2019</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://confirm.udacity.com/JVC3H7VV" target="_blank" rel="noopener" aria-label="Verificar na instituição: Nanodegree em Marketing Digital (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/nanodegree-marketing-digital-udacity.pdf" download aria-label="Baixar: Nanodegree em Marketing Digital"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct"><span lang="en">Exploring Emerging Technologies for Lifelong Learning and Success</span></b>
+                <span class="cm">The State University of New York · Coursera · 2018</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://coursera.org/verify/FUPQYFEZN7NV" target="_blank" rel="noopener" aria-label="Verificar na instituição: Exploring Emerging Technologies for Lifelong Learning and Success (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/emerging-technologies-suny-coursera.pdf" download aria-label="Baixar: Exploring Emerging Technologies for Lifelong Learning and Success"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct"><span lang="en">Mindshift: Break Through Obstacles to Learning</span></b>
+                <span class="cm">McMaster University · Coursera · 2017</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://coursera.org/verify/PELAFFMJANXK" target="_blank" rel="noopener" aria-label="Verificar na instituição: Mindshift: Break Through Obstacles to Learning (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/mindshift-mcmaster-coursera.pdf" download aria-label="Baixar: Mindshift: Break Through Obstacles to Learning"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct"><span lang="en">Fundamentals of Graphic Design</span></b>
+                <span class="cm">California Institute of the Arts · Coursera · 2017</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://coursera.org/verify/EM7C2TPFNUPS" target="_blank" rel="noopener" aria-label="Verificar na instituição: Fundamentals of Graphic Design (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/fundamentals-graphic-design-calarts-coursera.pdf" download aria-label="Baixar: Fundamentals of Graphic Design"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+            <li>
+              <div class="ci">
+                <b class="ct"><span lang="en">Learning How to Learn</span></b>
+                <span class="cm">University of California San Diego · Coursera · 2015</span>
+              </div>
+              <div class="cacoes">
+                <a class="cbx cbx-ver" href="https://coursera.org/verify/4UE6C967TYND" target="_blank" rel="noopener" aria-label="Verificar na instituição: Learning How to Learn (abre em nova aba)"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Verificar</span></a>
+                <a class="cbx" href="certificados/learning-how-to-learn-ucsd-coursera.pdf" download aria-label="Baixar: Learning How to Learn"><svg class="" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
+              </div>
+            </li>
+          </ul>
         </details>
       </div>
     </section>
@@ -1163,9 +1246,9 @@
         <a class="citem" style="--cc:var(--bordo)" href="mailto:alexandrejgcamargo@gmail.com"><span class="cl">Email pessoal</span><span class="cv">alexandrejgcamargo@gmail.com</span><span class="ar">↗</span></a>
         <a class="citem" style="--cc:var(--navy)" href="mailto:alexandre.camargo@mpa.gov.br"><span class="cl">Email institucional</span><span class="cv">alexandre.camargo@mpa.gov.br</span><span class="ar">↗</span></a>
         <div class="citem estatico" style="--cc:var(--gold)"><span class="cl">Telefone</span><span class="cv">(12) 98186-5866</span></div>
-        <a class="citem" style="--cc:var(--navy)" href="https://www.linkedin.com/in/alegarciacamargo/" target="_blank" rel="noopener"><span class="cl">LinkedIn</span><span class="cv">/in/alegarciacamargo</span><span class="ar">↗</span></a>
-        <a class="citem" style="--cc:var(--bordo)" href="https://www.instagram.com/alegarciacamargo/" target="_blank" rel="noopener"><span class="cl">Instagram</span><span class="cv">@alegarciacamargo</span><span class="ar">↗</span></a>
-        <a class="citem" style="--cc:var(--gold)" href="https://curriculo.sougov.economia.gov.br/alexandre-camargo-8221295264" target="_blank" rel="noopener"><span class="cl">SouGov</span><span class="cv">Currículo público</span><span class="ar">↗</span></a>
+        <a class="citem" style="--cc:var(--navy)" href="https://www.linkedin.com/in/alegarciacamargo/" target="_blank" rel="noopener" aria-label="LinkedIn: /in/alegarciacamargo (abre em nova aba)"><span class="cl">LinkedIn</span><span class="cv">/in/alegarciacamargo</span><span class="ar">↗</span></a>
+        <a class="citem" style="--cc:var(--bordo)" href="https://www.instagram.com/alegarciacamargo/" target="_blank" rel="noopener" aria-label="Instagram: @alegarciacamargo (abre em nova aba)"><span class="cl">Instagram</span><span class="cv">@alegarciacamargo</span><span class="ar">↗</span></a>
+        <a class="citem" style="--cc:var(--gold)" href="https://curriculo.sougov.economia.gov.br/alexandre-camargo-8221295264" target="_blank" rel="noopener" aria-label="Currículo público no SouGov (abre em nova aba)"><span class="cl">SouGov</span><span class="cv">Currículo público</span><span class="ar">↗</span></a>
       </div>
       <div class="replay-wrap"><button class="replay" id="btnReplay">Jogar de novo <span aria-hidden="true">↺</span></button></div>
       <footer><span>© 2026 Alexandre Camargo · Brasília, DF</span><span><a class="flink" href="classico.html">Ver a versão clássica deste site, sem o jogo</a></span></footer>
@@ -1493,8 +1576,8 @@
       g.appendChild(cd);
     }
     var lb=el('text',{x:630,y:y+98,'text-anchor':'middle','font-family':"'JetBrains Mono',monospace",'font-weight':'600','font-size':'9',fill:'#F3E9D2','letter-spacing':'1.4'}); lb.textContent=d[0].toUpperCase(); g.appendChild(lb);
-    g.addEventListener('click',function(){goSel('decks-sec');});
-    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goSel('decks-sec');}});
+    g.addEventListener('click',function(){abreBaralho(i);});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();abreBaralho(i);}});
     gD.appendChild(g);
   });
   // centraliza o conjunto de baralhos: eixo vertical do tabuleiro e meio da faixa lateral
@@ -1715,6 +1798,22 @@
     }
   }
   function goSel(id){var s=document.getElementById(id);if(s)s.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});}
+  // os tres baralhos levam a mesma secao: sem destacar, o visitante nao sabe
+  // qual dos tres ele abriu
+  var realceT=null;
+  function abreBaralho(i){
+    goSel('decks-sec');
+    var caixas=document.querySelectorAll('#decks-sec .deckbox');
+    clearTimeout(realceT);
+    Array.prototype.forEach.call(caixas,function(c){c.classList.remove('realce');});
+    var alvo=caixas[i];
+    if(!alvo) return;
+    setTimeout(function(){
+      alvo.classList.add('realce');
+      if(ann) ann.textContent='Baralho aberto: '+(alvo.querySelector('h3')||{textContent:''}).textContent;
+      realceT=setTimeout(function(){alvo.classList.remove('realce');},2600);
+    },reduce?40:520);
+  }
 
   function bind(id,fn){var o=document.getElementById(id);if(!o)return;o.addEventListener('click',fn);o.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();fn();}});}
 
@@ -2048,6 +2147,38 @@
   }
   abreComprovantes();
   window.addEventListener('hashchange',abreComprovantes);
+  // clicar num mailto nao faz nada em quem nao tem cliente de e-mail configurado:
+  // o endereco vai para a area de transferencia de qualquer jeito, com aviso na tela
+  (function(){
+    var el=document.getElementById('pedeSenha'); if(!el) return;
+    function copiar(txt){
+      if(navigator.clipboard && window.isSecureContext){
+        return navigator.clipboard.writeText(txt);
+      }
+      return new Promise(function(ok,nao){
+        try{
+          var ta=document.createElement('textarea');
+          ta.value=txt; ta.setAttribute('readonly','');
+          ta.style.position='fixed'; ta.style.top='-999px';
+          document.body.appendChild(ta); ta.select();
+          var deu=document.execCommand('copy');
+          document.body.removeChild(ta);
+          deu?ok():nao();
+        }catch(e){nao(e);}
+      });
+    }
+    el.addEventListener('click',function(){
+      var mail=el.getAttribute('data-email');
+      copiar(mail).then(function(){
+        showToast('<b>E-mail copiado:</b> '+mail);
+        ann.textContent='Endereço de e-mail copiado: '+mail;
+      }).catch(function(){
+        showToast('Escreva para <b>'+mail+'</b>');
+        ann.textContent='Escreva para '+mail;
+      });
+    });
+  })();
+
   // no papel tudo precisa sair, mesmo com os grupos encolhidos na tela.
   // a marca fica no proprio elemento: um 'beforeprint' repetido nao perde o estado
   window.addEventListener('beforeprint',function(){
