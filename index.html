@@ -526,14 +526,27 @@
     padding:6px 1px;display:inline-block}
   .cert-nota a:hover{color:var(--parch)}
   .cert-box{margin-top:var(--s4);padding:clamp(22px,2.6vw,32px)}
-  .cert-g{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:700;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:var(--s2);
-    padding-bottom:var(--s2);border-bottom:1.5px solid var(--line)}
-  .cert-g+.cert-lista{margin-bottom:var(--s5)}
-  .cert-lista:last-child{margin-bottom:0}
-  .cert-n{font-size:var(--fs-3xs);border:1.3px solid var(--line);border-radius:20px;
-    padding:1px 7px;color:var(--muted);font-weight:600}
-  .cert-lista{list-style:none;margin:0;padding:0}
+  /* cada subdivisao e o proprio controle: ganha destaque e encolhe a secao */
+  .cert-grupo{border:1.5px solid var(--line);border-radius:var(--r-md);overflow:hidden;
+    margin-bottom:var(--s3);background:rgba(26,26,26,.02)}
+  .cert-grupo:last-child{margin-bottom:0}
+  .cert-grupo[open]{background:transparent;border-color:var(--ink)}
+  .cert-g{display:flex;align-items:center;gap:var(--s3);cursor:pointer;list-style:none;
+    padding:var(--s3) var(--s4);min-height:var(--ctl-md);
+    transition:background var(--t-fast)}
+  .cert-g::-webkit-details-marker{display:none}
+  .cert-g:hover{background:rgba(201,154,46,.12)}
+  .cg-tit{font-family:var(--disp);font-weight:700;font-size:var(--fs-md);color:var(--ink);
+    flex:1 1 auto;min-width:0;line-height:1.25}
+  .cert-n{flex:0 0 auto;font-family:var(--mono);font-size:var(--fs-3xs);font-weight:700;
+    border:1.3px solid var(--ink);border-radius:20px;padding:2px 9px;color:var(--ink);
+    background:var(--parch-2)}
+  .cg-seta{flex:0 0 auto;width:19px;height:19px;color:var(--muted);
+    transition:transform var(--t-base) var(--ease)}
+  .cert-grupo[open] .cg-seta{transform:rotate(180deg);color:var(--ink)}
+  .cert-grupo[open] .cert-g{border-bottom:1.5px solid var(--line);background:rgba(201,154,46,.08)}
+  @media (prefers-reduced-motion:reduce){.cg-seta{transition:none}}
+  .cert-lista{list-style:none;margin:0;padding:0 var(--s4)}
   .cert-lista li{display:flex;align-items:center;gap:var(--s4);padding:var(--s3) 0;
     border-bottom:1px solid rgba(26,26,26,.10)}
   .cert-lista li:last-child{border-bottom:0}
@@ -554,6 +567,11 @@
     .ct{font-size:var(--fs-sm)}
   }
   @media print{
+    /* grupo fechado nao imprime o conteudo: no papel tudo aparece */
+    .cert-grupo .cert-lista{display:block!important}
+    .cert-grupo{border:0;background:none!important;margin-bottom:8pt}
+    .cert-g{background:none!important;border-bottom:1px solid #000!important;padding:0 0 3pt}
+    .cg-seta{display:none}
     .cert-nota a,.cbx{display:none}
     .cert-tit,.cert-g,.ct,.cm,.cn,.cert-nota{color:#000!important}
     .cert-box{background:none!important;border:1px solid #000}
@@ -1005,9 +1023,10 @@
     <section class="sec" id="certificados" data-casa="8">
       <div class="eyebrow"><span class="chip">◆</span><span class="sc">Carta extra · comprovantes</span></div>
       <h2 class="cert-tit">Diplomas e certificados</h2>
-      <p class="cert-nota">Os arquivos abrem com senha, para não deixar meus documentos pessoais soltos na internet. <a href="mailto:alexandrejgcamargo@gmail.com?subject=Senha%20dos%20certificados">Me peça a senha</a> e eu envio.</p>
+      <p class="cert-nota">Os arquivos abrem com senha, para não deixar meus documentos pessoais soltos na internet. <a href="mailto:alexandrejgcamargo@gmail.com?subject=Senha%20dos%20certificados">Solicite a senha</a> que eu envio.</p>
       <div class="paper cert-box">
-        <h3 class="cert-g">Graduação <span class="cert-n">2</span></h3>
+        <details class="cert-grupo">
+          <summary class="cert-g"><span class="cg-tit">Graduação</span><span class="cert-n">2</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
         <ul class="cert-lista">
           <li>
             <div class="ci">
@@ -1024,7 +1043,9 @@
             <a class="cbx" href="certificados/graduacao-administracao-fmu.pdf" download aria-label="Baixar o comprovante: Bacharelado em Administração"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
           </li>
         </ul>
-        <h3 class="cert-g">Pós-graduação e MBA <span class="cert-n">2</span></h3>
+        </details>
+        <details class="cert-grupo">
+          <summary class="cert-g"><span class="cg-tit">Pós-graduação e MBA</span><span class="cert-n">2</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
         <ul class="cert-lista">
           <li>
             <div class="ci">
@@ -1042,7 +1063,9 @@
             <a class="cbx" href="certificados/mba-design-thinking-gestao-pessoas-uniamerica.pdf" download aria-label="Baixar o comprovante: MBA em Design Thinking e Gestão de Pessoas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
           </li>
         </ul>
-        <h3 class="cert-g">Cursos e certificações <span class="cert-n">10</span></h3>
+        </details>
+        <details class="cert-grupo">
+          <summary class="cert-g"><span class="cg-tit">Cursos e certificações</span><span class="cert-n">10</span><svg class="cg-seta" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
         <ul class="cert-lista">
           <li>
             <div class="ci">
@@ -1116,6 +1139,7 @@
             <a class="cbx" href="certificados/learning-how-to-learn-ucsd-coursera.pdf" download aria-label="Baixar o comprovante: Learning How to Learn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg><span>PDF</span></a>
           </li>
         </ul>
+        </details>
       </div>
     </section>
 
@@ -2014,6 +2038,25 @@
       if(rolandoAgora) return;                   // o dedo ainda esta na tela
       if(ancora && window.scrollY>4) ancora.scrollIntoView({behavior:'auto',block:'start'});
     },260);
+  });
+
+  // quem chega por #certificados veio justamente baixar algo: nao faz sentido
+  // obrigar a um clique a mais. Nas outras entradas os grupos ficam encolhidos.
+  function abreComprovantes(){
+    if(location.hash!=='#certificados') return;
+    Array.prototype.forEach.call(document.querySelectorAll('.cert-grupo'),function(d){d.open=true;});
+  }
+  abreComprovantes();
+  window.addEventListener('hashchange',abreComprovantes);
+  // no papel tudo precisa sair, mesmo com os grupos encolhidos na tela.
+  // a marca fica no proprio elemento: um 'beforeprint' repetido nao perde o estado
+  window.addEventListener('beforeprint',function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.cert-grupo'),function(d){
+      if(!d.open){d.setAttribute('data-reabrir','1');d.open=true;}});
+  });
+  window.addEventListener('afterprint',function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.cert-grupo[data-reabrir]'),function(d){
+      d.open=false;d.removeAttribute('data-reabrir');});
   });
 
   /* progresso */
