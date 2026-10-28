@@ -1692,7 +1692,7 @@
       var nav=(performance.getEntriesByType('navigation')||[])[0];
       var voltou=nav && nav.type==='back_forward';
       var q=parseInt(sessionStorage.getItem('xan-quando')||'0',10);
-      var recente=q>0 && (Date.now()-q)<180000;
+      var recente=q>0 && (Date.now()-q)<1800000;   // 30 min: ler um diploma leva tempo
       return !!(voltou||recente);
     }catch(e){ return false; }
   })();
@@ -2173,8 +2173,9 @@
   // Guarda o que estava aberto e a posicao, e devolve os dois ao retornar.
   (function(){
     var KA='xan-comprovantes', KY='xan-scroll', KT='xan-quando';
-    // a restauracao automatica do navegador brigava com a nossa e causava salto
-    try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+    // so assume o controle quando vai mesmo repor a posicao; caso contrario
+    // deixa o navegador fazer o que sabe, em vez de abandonar no topo
+    try{ if('scrollRestoration' in history && vaiRestaurar) history.scrollRestoration='manual'; }catch(e){}
     // o Safari do iPhone descarrega abas em segundo plano: ao voltar do PDF a pagina
     // recarrega do zero e a navegacao nem conta como 'voltar'. Por isso a posicao e
     // gravada durante a rolagem, e nao so na saida, e devolvida tambem nesse caso.
@@ -2234,6 +2235,17 @@
     devolveLugar();
     // o Safari tambem devolve a pagina do cache sem reexecutar o script
     window.addEventListener('pageshow', function(ev){ if(ev.persisted) devolveLugar(); });
+    // ultima rede: se por qualquer motivo ninguem reposicionou e havia lugar
+    // guardado ha pouco, devolve assim mesmo em vez de abandonar no topo
+    setTimeout(function(){
+      try{
+        if(window.scrollY>40) return;                 // ja saiu do topo: nada a fazer
+        if(location.hash && !/^#casa-\d$/.test(location.hash)) return;
+        var q=parseInt(sessionStorage.getItem(KT)||'0',10);
+        var y=parseInt(sessionStorage.getItem(KY)||'0',10);
+        if(y>200 && q>0 && (Date.now()-q)<1800000) window.scrollTo(0,y);
+      }catch(e){}
+    },1200);
   })();
   // clicar num mailto nao faz nada em quem nao tem cliente de e-mail configurado:
   // o endereco vai para a area de transferencia de qualquer jeito, com aviso na tela
