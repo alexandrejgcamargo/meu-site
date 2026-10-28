@@ -2247,6 +2247,52 @@
       }catch(e){}
     },1200);
   })();
+  // ===== baixar sem sair da pagina =====
+  // a raiz do problema era a navegacao: ao abrir o PDF o iPhone descarregava a
+  // aba, e devolver a posicao depois e sempre um remendo. Aqui o arquivo vem por
+  // fetch e e entregue como blob, entao nenhuma navegacao acontece.
+  (function(){
+    if(!window.fetch || !window.URL || !URL.createObjectURL) return;  // deixa o link agir
+    var ocupado=false;
+    document.addEventListener('click',function(ev){
+      var n=ev.target, a=null;
+      while(n && n!==document){
+        if(n.tagName==='A' && (n.getAttribute('href')||'').slice(-4)==='.pdf'){ a=n; break; }
+        n=n.parentNode;
+      }
+      if(!a) return;
+      if(ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.altKey||ev.button) return;  // respeita nova aba
+      ev.preventDefault();
+      if(ocupado) return;
+      ocupado=true;
+      var href=a.getAttribute('href'), nome=href.split('/').pop();
+      // o titulo do item le melhor que o nome do arquivo
+      var li=a.closest ? a.closest('li') : null;
+      var t=li && li.querySelector('.ct');
+      var rotulo=t ? t.textContent.trim() : nome.replace(/\.pdf$/,'').replace(/-/g,' ');
+      if(href.indexOf('/integros/')>=0) rotulo+=' (íntegro)';
+      showToast('<b>Baixando…</b> '+rotulo);
+      if(ann) ann.textContent='Baixando '+rotulo;
+      fetch(href).then(function(r){
+        if(!r.ok) throw new Error('http '+r.status);
+        return r.blob();
+      }).then(function(bl){
+        var u=URL.createObjectURL(bl);
+        var t=document.createElement('a');
+        t.href=u; t.download=nome; t.style.display='none';
+        document.body.appendChild(t); t.click();
+        setTimeout(function(){ try{URL.revokeObjectURL(u);}catch(e){} t.parentNode&&t.parentNode.removeChild(t); },5000);
+        showToast('<b>Pronto:</b> '+rotulo);
+        if(ann) ann.textContent='Arquivo baixado: '+rotulo;
+        ocupado=false;
+      }).catch(function(){
+        ocupado=false;
+        // ultimo recurso: abre numa aba propria, sem derrubar esta
+        try{ window.open(href,'_blank','noopener'); }catch(e){ location.href=href; }
+      });
+    },false);
+  })();
+
   // clicar num mailto nao faz nada em quem nao tem cliente de e-mail configurado:
   // o endereco vai para a area de transferencia de qualquer jeito, com aviso na tela
   (function(){
