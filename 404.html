@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Casa inexistente — Alexandre Camargo</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#1F3D2B" />
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOSIgZmlsbD0iIzhCMkUyRSIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE2IiBmaWxsPSIjRjNFOUQyIiBzdHJva2U9IiNDOTlBMkUiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSIzOC41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC13ZWlnaHQ9IjcwMCIgZm9udC1zaXplPSIxNyIgZmlsbD0iIzhCMkUyRSI+QUM8L3RleHQ+PC9zdmc+" />
+<style>
+  @font-face{font-family:'Libre Baskerville';font-style:normal;font-weight:400;font-display:swap;src:url(/fontes/libre-baskerville-latin-400-normal.woff2) format('woff2')}
+  @font-face{font-family:'Libre Baskerville';font-style:italic;font-weight:400;font-display:swap;src:url(/fontes/libre-baskerville-latin-400-italic.woff2) format('woff2')}
+  @font-face{font-family:'Libre Baskerville';font-style:normal;font-weight:700;font-display:swap;src:url(/fontes/libre-baskerville-latin-700-normal.woff2) format('woff2')}
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(/fontes/jetbrains-mono-latin-700-normal.woff2) format('woff2')}
+  :root{--felt:#1F3D2B;--felt-2:#16301F;--parch:#F3E9D2;--parch-2:#FBF4E4;--ink:#1A1A1A;--bordo:#8B2E2E;--gold:#C99A2E;--gold-2:#E2B94E;--muted:#6B6257;
+    --disp:'Libre Baskerville',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
+  *{box-sizing:border-box}
+  html{height:100%}body{margin:0;min-height:100%;min-height:100dvh}
+  body{background:var(--felt) radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.06),transparent 60%);color:var(--parch);font-family:var(--disp);
+    display:grid;place-items:center;padding:max(24px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));line-height:1.55}
+  .carta{position:relative;width:min(100%,520px);background:var(--parch);color:var(--ink);border:2px solid var(--ink);border-radius:8px;
+    box-shadow:8px 10px 0 rgba(0,0,0,.35);overflow:hidden}
+  .carta::after{content:"";position:absolute;inset:12px;border:1px solid var(--gold);border-radius:3px;pointer-events:none}
+  .band{display:flex;justify-content:space-between;align-items:center;background:var(--bordo);color:var(--parch);border-bottom:2px solid var(--ink);
+    padding:12px 22px;font-family:var(--mono);font-weight:700;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase}
+  .in{padding:26px 26px 30px}
+  .dado{display:block;width:96px;height:auto;margin:0 auto 14px}
+  h1{font-size:clamp(1.5rem,5vw,2rem);margin:0 0 8px;line-height:1.2}
+  h1 i{color:var(--bordo)}
+  p{margin:0 0 10px;font-size:1rem;color:#3A352D}
+  .peq{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-top:14px;overflow-wrap:anywhere}
+  .acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--bordo);color:var(--parch);border:2px solid var(--ink);border-radius:3px;
+    padding:12px 20px;font-family:var(--mono);font-weight:700;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    box-shadow:3px 3px 0 var(--ink);min-height:44px}
+  .cta:hover,.cta:focus-visible{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+  .cta:focus-visible{outline:3px solid var(--gold-2);outline-offset:3px}
+  .sec{background:transparent;color:var(--ink);border:1.5px solid var(--ink);box-shadow:none}
+  .sec:hover,.sec:focus-visible{background:rgba(201,154,46,.18)}
+  @media (prefers-reduced-motion:no-preference){ .dado{animation:bob 2.8s ease-in-out infinite} @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(4deg)}} }
+  @media (forced-colors:active){ .carta,.cta{forced-color-adjust:auto} }
+</style>
+</head>
+<body>
+  <main class="carta" aria-labelledby="t">
+    <div class="band"><span>Carta de azar</span><span>Erro 404</span></div>
+    <div class="in">
+      <svg class="dado" viewBox="-60 -70 120 140" aria-hidden="true">
+        <ellipse cx="3" cy="62" rx="48" ry="9" fill="rgba(0,0,0,.18)"/>
+        <g>
+          <path d="M0,-54.4 L47,-27.2 L0,0 L-47,-27.2 Z" fill="#FBF4E4" stroke="#1A1A1A" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M-47,-27.2 L0,0 L0,54.4 L-47,27.2 Z" fill="#E4DABE" stroke="#1A1A1A" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M0,0 L47,-27.2 L47,27.2 L0,54.4 Z" fill="#CFC1A0" stroke="#1A1A1A" stroke-width="2.2" stroke-linejoin="round"/>
+          <!-- face de cima: a interrogacao no lugar dos pontos -->
+          <g transform="matrix(47 -27.2 47 27.2 -47 -27.2)"><text x=".5" y=".68" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size=".62" fill="#8B2E2E">?</text></g>
+          <!-- pontos das faces laterais -->
+          <g fill="#1A1A1A" transform="matrix(47 27.2 0 54.4 -47 -27.2)"><circle cx=".5" cy=".5" r=".1"/></g>
+          <g fill="#1A1A1A" transform="matrix(47 -27.2 0 54.4 0 0)"><circle cx=".28" cy=".28" r=".1"/><circle cx=".72" cy=".72" r=".1"/></g>
+        </g>
+      </svg>
+      <h1 id="t">Casa inexistente. <i>Volte ao início.</i></h1>
+      <p>Esta casa não está no tabuleiro: o endereço mudou, foi digitado errado ou o arquivo saiu do jogo.</p>
+      <p class="peq" id="end"></p>
+      <div class="acoes">
+        <a class="cta" href="/">Voltar ao tabuleiro <span aria-hidden="true">↺</span></a>
+        <a class="cta sec" href="/#certificados">Diplomas e certificados</a>
+      </div>
+    </div>
+  </main>
+  <script>
+    try{ var e=document.getElementById('end'); if(location.pathname && location.pathname!=='/') e.textContent='Endereço pedido: '+location.pathname; }catch(x){}
+  </script>
+</body>
+</html>
